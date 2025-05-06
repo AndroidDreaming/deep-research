@@ -2,56 +2,121 @@
   "title": "深度研究",
   "theme": "系统主题",
   "openSource": "开源代码",
-  "copyright": "{{name}} 用 ❤️ 构建",
+  "copyright": "{{name}} 团队用 ❤️ 构建",
+  "searchPlaceholder": "请输入关键词",
   "research": {
     "common": {
       "startThinking": "开始思考",
+      "rethinking": "重新思考",
       "thinkingQuestion": "思考问题...",
+      "writeReportPlan": "撰写报告方案",
+      "rewriteReportPlan": "重写报告方案",
       "startResearch": "开始研究",
+      "restartResearch": "重新研究",
       "writeReport": "撰写报告",
       "continueResearch": "继续研究",
+      "indepthResearch": "深度研究",
       "rewriteReport": "重写报告",
       "sources": "资料来源",
       "thinking": "思考中...",
       "research": "研究中...",
       "writing": "撰写中...",
       "newResearch": "开始新研究",
+      "addToKnowledgeBase": "添加到知识库",
+      "addToKnowledgeBaseTip": "已添加到知识库",
+      "restudy": "重新研究",
+      "edit": "编辑",
+      "save": "保存",
+      "copy": "复制",
+      "export": "导出",
       "delete": "删除"
     },
     "topic": {
       "title": "1. 研究方向",
-      "topicLabel": "研究主题",
+      "topicLabel": "1.1 研究主题",
       "topicPlaceholder": "任何您想了解的问题..."
     },
     "feedback": {
       "title": "2. 提出您的想法",
       "emptyTip": "等待确定研究主题...",
       "feedbackLabel": "您的回答（可选）",
-      "feedbackPlaceholder": "畅所欲言，谈谈您的见解..."
+      "feedbackPlaceholder": "畅所欲言，谈谈您的见解...",
+      "questions": "2.1 系统提问",
+      "reportPlan": "2.2 研究报告方案"
     },
     "searchResult": {
       "title": "3. 信息搜集",
       "emptyTip": "等待分配研究任务...",
       "suggestionLabel": "研究建议（可选）",
-      "suggestionPlaceholder": "是否增加或者调整研究方向..."
+      "suggestionPlaceholder": "是否增加或者调整研究方向...",
+      "references": "参考文献"
     },
     "finalReport": {
       "title": "4. 最终报告",
       "emptyTip": "等待数据汇总...",
       "researchedInfor": "已研究 {{total}} 个网站",
+      "localResearchedInfor": "已研究 {{total}} 个本地资源",
       "writingRequirementLabel": "写作要求（可选）",
       "writingRequirementPlaceholder": "您可以提出任何与撰写报告相关的要求。"
-    },
-    "history": {
-      "title": "历史记录",
-      "name": "标题",
-      "emptyTip": "没有历史记录",
-      "date": "创建时间",
-      "actions": "操作",
-      "load": "加载",
-      "delete": "删除",
-      "close": "关闭",
-      "noHistory": "没有历史记录"
+    }
+  },
+  "history": {
+    "title": "历史记录",
+    "description": "研究历史保存在浏览器本地，仅保存已完成的研究。",
+    "name": "标题",
+    "emptyTip": "没有历史记录",
+    "date": "日期",
+    "actions": "操作",
+    "import": "导入",
+    "importTip": "导入研究",
+    "importSuccess": "{{title}} 导入成功。",
+    "importFailed": "{{title}} 导入失败。",
+    "load": "加载",
+    "export": "导出",
+    "delete": "删除",
+    "loadMore": "加载更多历史",
+    "close": "关闭",
+    "noHistory": "没有历史记录"
+  },
+  "knowledge": {
+    "title": "本地知识库",
+    "description": "存储在浏览器本地的知识库。",
+    "create": "创建",
+    "createTip": "创建新知识",
+    "emptyTip": "没有内容",
+    "name": "标题",
+    "size": "大小",
+    "date": "日期",
+    "action": "操作",
+    "add": "添加",
+    "edit": "编辑",
+    "delete": "删除",
+    "loadMore": "加载更多知识",
+    "resource": "资源",
+    "fileInfor": "由用户于 {{createdAt}} 上传。",
+    "urlInfor": "由用户于 {{createdAt}} 获取。",
+    "createInfor": "由用户于 {{createdAt}} 创建。",
+    "webCrawler": "网页爬取器",
+    "webCrawlerTip": "网页爬取器通过服务器获取指定 URL 的页面内容, 并以 Markdown 格式返回数据。",
+    "urlPlaceholder": "请输入网址...",
+    "urlError": "请输入有效的 URL",
+    "localCrawler": "本地爬取器",
+    "clear": "清除",
+    "fetch": "获取",
+    "localResourceTitle": "1.2 本地研究资源 (可选)",
+    "addResource": "添加资源",
+    "addResourceMessage": "{{title}} 已添加到资源。",
+    "resourceNotFound": "未找到资源",
+    "knowledge": "知识",
+    "localFile": "本地文件",
+    "webPage": "网页",
+    "editor": {
+      "title": "标题",
+      "titlePlaceholder": "请输入标题...",
+      "content": "内容 (Markdown)",
+      "back": "返回",
+      "reset": "重置",
+      "submit": "提交"
     }
   },
   "artifact": {
@@ -74,29 +139,95 @@
     "send": "发送"
   },
   "editor": {
-    "WYSIWYM": "所见即所得",
-    "save": "保存",
-    "edit": "编辑",
-    "export": "导出",
-    "placeholder": "请输入文本或按下“/”显示指令",
-    "text": "文本",
-    "list": "列表",
-    "advanced": "高级",
-    "h1": "标题 1",
-    "h2": "标题 2",
-    "h3": "标题 3",
-    "h4": "标题 4",
-    "h5": "标题 5",
-    "h6": "标题 6",
-    "quote": "引用",
-    "divider": "分隔线",
-    "bulletList": "无序列表",
-    "orderedList": "有序列表",
-    "taskList": "任务列表",
-    "image": "图像",
-    "codeBlock": "代码",
-    "table": "表格",
-    "math": "数学公式"
+    "copy": "复制",
+    "tooltip": {
+      "bold": "粗体",
+      "italic": "斜体",
+      "strikethrough": "删除线",
+      "code": "代码",
+      "math": "数学公式",
+      "link": "链接",
+      "quote": "引用"
+    },
+    "slash": {
+      "heading": {
+        "name": "标题",
+        "description": "插入标题"
+      },
+      "h1": {
+        "name": "一级标题",
+        "description": "插入一级标题"
+      },
+      "h2": {
+        "name": "二级标题",
+        "description": "插入二级标题"
+      },
+      "h3": {
+        "name": "三级标题",
+        "description": "插入三级标题"
+      },
+      "h4": {
+        "name": "四级标题",
+        "description": "插入四级标题"
+      },
+      "h5": {
+        "name": "五级标题",
+        "description": "插入五级标题"
+      },
+      "h6": {
+        "name": "六级标题",
+        "description": "插入六级标题"
+      },
+      "list": {
+        "name": "列表",
+        "description": "插入列表"
+      },
+      "ul": {
+        "name": "无序列表",
+        "description": "插入无序列表项"
+      },
+      "ol": {
+        "name": "有序列表",
+        "description": "插入有序列表项"
+      },
+      "todo": {
+        "name": "待办事项",
+        "description": "插入待办事项"
+      },
+      "advanced": {
+        "name": "高级",
+        "description": "高级命令"
+      },
+      "link": {
+        "name": "链接",
+        "description": "插入链接"
+      },
+      "image": {
+        "name": "图片",
+        "description": "插入图片"
+      },
+      "code": {
+        "name": "代码块",
+        "description": "插入代码块"
+      },
+      "math": {
+        "name": "数学公式",
+        "description": "插入数学公式"
+      },
+      "table": {
+        "name": "表格",
+        "description": "插入一个 3x3 表格"
+      },
+      "quote": {
+        "name": "引用",
+        "description": "插入引用"
+      },
+      "horizontal": {
+        "name": "水平线",
+        "description": "插入水平线"
+      }
+    },
+    "placeholder": "请输入文本，或输入 \"/ \" 使用指令"
   },
   "setting": {
     "title": "设置",
@@ -142,6 +273,9 @@
     "searchResults": "搜索数量",
     "searchResultsTip": "最大搜索数量。部分搜索引擎并不支持此参数。",
     "searchApiKeyPlaceholder": "请输入您的 API 密钥",
+    "searchScope": "搜索范围",
+    "all": "全部",
+    "academic": "学术",
     "language": "界面语言",
     "languageTip": "系统会根据用户浏览器语言自动选择界面语言。同时，也会影响 AI 模型的响应语言。",
     "system": "跟随系统",

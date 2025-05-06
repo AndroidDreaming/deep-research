@@ -2,10 +2,17 @@
 import dynamic from "next/dynamic";
 import { useState, useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Download, FileText, Signature, LoaderCircle } from "lucide-react";
+import {
+  Download,
+  FileText,
+  Signature,
+  LoaderCircle,
+  NotebookText,
+} from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 import { Button } from "@/components/Internal/Button";
 import {
   Form,
@@ -24,11 +31,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import useAccurateTimer from "@/hooks/useAccurateTimer";
 import useDeepResearch from "@/hooks/useDeepResearch";
+import useKnowledge from "@/hooks/useKnowledge";
 import { useTaskStore } from "@/store/task";
+import { useKnowledgeStore } from "@/store/knowledge";
 import { getSystemPrompt } from "@/utils/deep-research";
 import { downloadFile } from "@/utils/file";
 
-const MilkdownEditor = dynamic(() => import("@/components/MilkdownEditor"));
+const MagicDown = dynamic(() => import("@/components/MagicDown"));
 const Artifact = dynamic(() => import("@/components/Artifact"));
 
 const formSchema = z.object({
@@ -39,6 +48,7 @@ function FinalReport() {
   const { t } = useTranslation();
   const taskStore = useTaskStore();
   const { status, writeFinalReport } = useDeepResearch();
+  const { generateId } = useKnowledge();
   const {
     formattedTime,
     start: accurateTimerStart,
@@ -72,30 +82,52 @@ function FinalReport() {
     }
   }
 
-  useEffect(() => {
-    form.setValue("requirement", taskStore.requirement);
-  }, [taskStore.requirement, form]);
-
   function getFinakReportContent() {
-    const { finalReport, sources } = useTaskStore.getState();
+    const { finalReport, resources, sources } = useTaskStore.getState();
 
     return [
       finalReport,
+      resources.length > 0
+        ? [
+            "---",
+            `## ${t("research.finalReport.localResearchedInfor", {
+              total: resources.length,
+            })}`,
+            `${resources
+              .map((source, idx) => `${idx + 1}. ${source.name}`)
+              .join("\n")}`,
+          ].join("\n")
+        : "",
       sources.length > 0
         ? [
-            "\n\n---",
+            "---",
             `## ${t("research.finalReport.researchedInfor", {
               total: sources.length,
             })}`,
             `${sources
               .map(
                 (source, idx) =>
-                  `${idx + 1}. [${source.title || source.url}](${source.url})`
+                  `${idx + 1}. [${source.title || source.url}][${idx + 1}]`
               )
               .join("\n")}`,
-          ].join("\n\n")
+          ].join("\n")
         : "",
     ].join("\n\n");
+  }
+
+  function addToKnowledgeBase() {
+    const { title } = useTaskStore.getState();
+    const { save } = useKnowledgeStore.getState();
+    const currentTime = Date.now();
+    save({
+      id: generateId("knowledge"),
+      title,
+      content: getFinakReportContent(),
+      type: "knowledge",
+      createdAt: currentTime,
+      updatedAt: currentTime,
+    });
+    toast.message(t("research.common.addToKnowledgeBaseTip"));
   }
 
   async function handleDownloadPDF() {
@@ -105,14 +137,18 @@ function FinalReport() {
     document.title = originalTitle;
   }
 
+  useEffect(() => {
+    form.setValue("requirement", taskStore.requirement);
+  }, [taskStore.requirement, form]);
+
   return (
     <section className="p-4 border rounded-md mt-4 print:border-none">
       <h3 className="font-semibold text-lg border-b mb-2 leading-10 print:hidden">
         {t("research.finalReport.title")}
       </h3>
       {taskStore.finalReport !== "" ? (
-        <article className="border-b">
-          <MilkdownEditor
+        <article>
+          <MagicDown
             className="min-h-72"
             value={taskStore.finalReport}
             onChange={(value) => taskStore.updateFinalReport(value)}
@@ -132,6 +168,18 @@ function FinalReport() {
                 <div className="px-1">
                   <Separator className="dark:bg-slate-700" />
                 </div>
+                <Button
+                  className="float-menu-button"
+                  type="button"
+                  size="icon"
+                  variant="ghost"
+                  title={t("research.common.addToKnowledgeBase")}
+                  side="left"
+                  sideoffset={8}
+                  onClick={() => addToKnowledgeBase()}
+                >
+                  <NotebookText />
+                </Button>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
@@ -139,7 +187,7 @@ function FinalReport() {
                       type="button"
                       size="icon"
                       variant="ghost"
-                      title={t("editor.export")}
+                      title={t("research.common.export")}
                       side="left"
                       sideoffset={8}
                     >
@@ -163,7 +211,10 @@ function FinalReport() {
                       <FileText />
                       <span>Markdown</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleDownloadPDF()}>
+                    <DropdownMenuItem
+                      className="max-md:hidden"
+                      onClick={() => handleDownloadPDF()}
+                    >
                       <Signature />
                       <span>PDF</span>
                     </DropdownMenuItem>
@@ -172,6 +223,21 @@ function FinalReport() {
               </>
             }
           />
+          {taskStore.resources.length > 0 ? (
+            <div className="prose prose-slate dark:prose-invert">
+              <hr className="my-6" />
+              <h2>
+                {t("research.finalReport.localResearchedInfor", {
+                  total: taskStore.resources.length,
+                })}
+              </h2>
+              <ul>
+                {taskStore.resources.map((resource) => {
+                  return <li key={resource.id}>{resource.name}</li>;
+                })}
+              </ul>
+            </div>
+          ) : null}
           {taskStore.sources?.length > 0 ? (
             <div className="prose prose-slate dark:prose-invert">
               <hr className="my-6" />
@@ -197,7 +263,10 @@ function FinalReport() {
       ) : null}
       {taskFinished ? (
         <Form {...form}>
-          <form className="mt-4" onSubmit={form.handleSubmit(handleSubmit)}>
+          <form
+            className="mt-4 border-t pt-4 print:hidden"
+            onSubmit={form.handleSubmit(handleSubmit)}
+          >
             <FormField
               control={form.control}
               name="requirement"
@@ -226,8 +295,10 @@ function FinalReport() {
                   <span>{status}</span>
                   <small className="font-mono">{formattedTime}</small>
                 </>
-              ) : (
+              ) : taskStore.finalReport === "" ? (
                 t("research.common.writeReport")
+              ) : (
+                t("research.common.rewriteReport")
               )}
             </Button>
           </form>

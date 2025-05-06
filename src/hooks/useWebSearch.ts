@@ -6,7 +6,7 @@ import {
   BOCHA_BASE_URL,
   SEARXNG_BASE_URL,
 } from "@/constants/urls";
-import { informationCollectorPrompt } from "@/utils/deep-research";
+import { rewritingPrompt } from "@/constants/prompts";
 import { multiApiKeyPolling } from "@/utils/model";
 import { generateSignature } from "@/utils/signature";
 import { completePath } from "@/utils/url";
@@ -330,7 +330,7 @@ function useWebSearch() {
           contents: {
             text: true,
             summary: {
-              query: informationCollectorPrompt(query),
+              query: `Given the following query from the user:\n<query>${query}</query>\n\n${rewritingPrompt}`,
             },
             numResults: Number(searchMaxResult) * 5,
             livecrawl: "auto",
@@ -392,8 +392,13 @@ function useWebSearch() {
   }
 
   async function searxng(query: string, options: SearxngSearchOptions = {}) {
-    const { mode, searxngApiProxy, searchMaxResult, accessPassword } =
-      useSettingStore.getState();
+    const {
+      mode,
+      searxngApiProxy,
+      searxngScope,
+      searchMaxResult,
+      accessPassword,
+    } = useSettingStore.getState();
     const accessKey = generateSignature(accessPassword, Date.now());
 
     const headers: HeadersInit = {
@@ -402,8 +407,12 @@ function useWebSearch() {
     };
     const params = {
       q: query,
-      categories: ["general", "web"],
-      engines: ["google", "bing", "duckduckgo", "brave", "arxiv"],
+      categories:
+        searxngScope === "academic" ? ["science"] : ["general", "web"],
+      engines:
+        searxngScope === "academic"
+          ? ["arxiv", "google scholar", "pubmed", "wikispecies"]
+          : ["google", "bing", "duckduckgo", "brave", "wikipedia"],
       lang: "auto",
       format: "json",
       autocomplete: "google",

@@ -3,55 +3,120 @@
   "theme": "Theme",
   "openSource": "Open Source",
   "copyright": "Created with ❤️ by {{name}} team",
+  "searchPlaceholder": "Please enter keywords",
   "research": {
     "common": {
       "startThinking": "Start Thinking",
+      "rethinking": "Rethinking",
       "thinkingQuestion": "Thinking Question...",
+      "writeReportPlan": "Write Report Plan",
+      "rewriteReportPlan": "Rewrite Report Plan",
       "startResearch": "Start Research",
+      "restartResearch": "Restart Research",
       "writeReport": "Write Report",
       "continueResearch": "Continue Research",
+      "indepthResearch": "In-depth Research",
       "rewriteReport": "Rewrite Report",
       "sources": "Sources",
       "thinking": "Thinking...",
       "research": "Research...",
       "writing": "Writing...",
       "newResearch": "New Research",
+      "addToKnowledgeBase": "Add to Knowledge Base",
+      "addToKnowledgeBaseTip": "Added to Knowledge Base",
+      "restudy": "Re-study",
+      "edit": "Edit",
+      "save": "Save",
+      "copy": "Copy",
+      "export": "Export",
       "delete": "Delete"
     },
     "topic": {
       "title": "1. Research Topics",
-      "topicLabel": "Research topics",
+      "topicLabel": "1.1 Research topics",
       "topicPlaceholder": "Any questions you want to know..."
     },
     "feedback": {
       "title": "2. Ask Question",
       "emptyTip": "Waiting for research topic...",
       "feedbackLabel": "Your Answer (Optional)",
-      "feedbackPlaceholder": "You can answer whatever you want..."
+      "feedbackPlaceholder": "You can answer whatever you want...",
+      "questions": "2.1 System Questions",
+      "reportPlan": "2.2 Research report plan"
     },
     "searchResult": {
       "title": "3. Information Collection",
       "emptyTip": "Waiting for research task...",
       "suggestionLabel": "Research suggestions (Optional)",
-      "suggestionPlaceholder": "Whether to add or adjust research directions..."
+      "suggestionPlaceholder": "Whether to add or adjust research directions...",
+      "references": "References"
     },
     "finalReport": {
       "title": "4. Final Report",
       "emptyTip": "Waiting for data to be collated...",
       "researchedInfor": "Researched {{total}} websites",
+      "localResearchedInfor": "Researched {{total}} local resources",
       "writingRequirementLabel": "Writing requirements (optional)",
       "writingRequirementPlaceholder": "You can raise any request related to report writing."
-    },
-    "history": {
-      "title": "History",
-      "name": "Title",
-      "emptyTip": "No history records",
-      "date": "Date",
-      "actions": "Action",
-      "load": "Load",
-      "delete": "Delete",
-      "close": "Close",
-      "noHistory": "No history records"
+    }
+  },
+  "history": {
+    "title": "History",
+    "description": "Research history is stored locally in the browser, and only save completed research.",
+    "name": "Title",
+    "emptyTip": "No history records",
+    "date": "Date",
+    "actions": "Action",
+    "import": "Import",
+    "importTip": "Import Research",
+    "importSuccess": "{{title}} Imported successfully.",
+    "importFailed": "{{title}} Import failed.",
+    "load": "Load",
+    "export": "Export",
+    "delete": "Delete",
+    "loadMore": "Load More History",
+    "close": "Close",
+    "noHistory": "No history records"
+  },
+  "knowledge": {
+    "title": "Local Knowledge Base",
+    "description": "A knowledge base stored locally in the browser.",
+    "create": "Create",
+    "createTip": "Create new knowledge",
+    "emptyTip": "No Content",
+    "name": "Name",
+    "size": "Size",
+    "date": "Date",
+    "action": "Action",
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "loadMore": "Load More Knowledges",
+    "resource": "Resource",
+    "fileInfor": "Uploaded by user at {{createdAt}}.",
+    "urlInfor": "Fetched by user at {{createdAt}}.",
+    "createInfor": "Created by user at {{createdAt}}.",
+    "webCrawler": "Web Crawler",
+    "webCrawlerTip": "The web crawler obtains the page content of the specified URL through server and returns the data in Markdown format.",
+    "urlPlaceholder": "Please enter the URL...",
+    "urlError": "Please enter a valid URL",
+    "localCrawler": "Local Crawler",
+    "clear": "Clear",
+    "fetch": "Fetch",
+    "localResourceTitle": "1.2 Local research resources (optional)",
+    "addResource": "Add Resource",
+    "addResourceMessage": "{{title}} has been added to the resource.",
+    "resourceNotFound": "Resource not found",
+    "knowledge": "Knowledge",
+    "localFile": "Local File",
+    "webPage": "Web Page",
+    "editor": {
+      "title": "Title",
+      "titlePlaceholder": "Please enter a title...",
+      "content": "Content (Markdown)",
+      "back": "Back",
+      "reset": "Reset",
+      "submit": "Submit"
     }
   },
   "artifact": {
@@ -74,29 +139,95 @@
     "send": "Send"
   },
   "editor": {
-    "WYSIWYM": "WYSIWYM",
-    "save": "Save",
-    "edit": "Edit",
-    "export": "Export",
-    "placeholder": "Please enter text or press \"/\" for commands",
-    "text": "Text",
-    "list": "List",
-    "advanced": "Advanced",
-    "h1": "Heading 1",
-    "h2": "Heading 2",
-    "h3": "Heading 3",
-    "h4": "Heading 4",
-    "h5": "Heading 5",
-    "h6": "Heading 6",
-    "quote": "Quote",
-    "divider": "Divider",
-    "bulletList": "BulletList",
-    "orderedList": "OrderedList",
-    "taskList": "TaskList",
-    "image": "Image",
-    "codeBlock": "Code Block",
-    "table": "Table",
-    "math": "Math"
+    "copy": "Copy",
+    "tooltip": {
+      "bold": "Bold",
+      "italic": "Italic",
+      "strikethrough": "Strikethrough",
+      "code": "Code",
+      "math": "Math",
+      "link": "Link",
+      "quote": "Quote"
+    },
+    "slash": {
+      "heading": {
+        "name": "Heading",
+        "description": "Insert Heading"
+      },
+      "h1": {
+        "name": "Heading 1",
+        "description": "Insert Heading 1"
+      },
+      "h2": {
+        "name": "Heading 2",
+        "description": "Insert Heading 2"
+      },
+      "h3": {
+        "name": "Heading 3",
+        "description": "Insert Heading 3"
+      },
+      "h4": {
+        "name": "Heading 4",
+        "description": "Insert Heading 4"
+      },
+      "h5": {
+        "name": "Heading 5",
+        "description": "Insert Heading 5"
+      },
+      "h6": {
+        "name": "Heading 6",
+        "description": "Insert Heading 6"
+      },
+      "list": {
+        "name": "List",
+        "description": "Insert List"
+      },
+      "ul": {
+        "name": "Bullet List",
+        "description": "Insert Bullet List Item"
+      },
+      "ol": {
+        "name": "Ordered List",
+        "description": "Insert Ordered List Item"
+      },
+      "todo": {
+        "name": "Todo List",
+        "description": "Insert Todo List Item"
+      },
+      "advanced": {
+        "name": "Advanced",
+        "description": "Advanced Commands"
+      },
+      "link": {
+        "name": "Link",
+        "description": "Insert Link"
+      },
+      "image": {
+        "name": "Image",
+        "description": "Insert Image"
+      },
+      "code": {
+        "name": "Code Block",
+        "description": "Insert Code Block"
+      },
+      "math": {
+        "name": "Math Block",
+        "description": "Insert Math Block"
+      },
+      "table": {
+        "name": "Table",
+        "description": "Insert a 3x3 Table"
+      },
+      "quote": {
+        "name": "Quote",
+        "description": "Insert Quote"
+      },
+      "horizontal": {
+        "name": "Horizontal",
+        "description": "Insert Horizontal"
+      }
+    },
+    "placeholder": "Please enter text, or enter \"/ \" to use commands"
   },
   "setting": {
     "title": "Setting",
@@ -142,6 +273,9 @@
     "searchResults": "Search Results",
     "searchResultsTip": "The maximum number of web searches. Some search engines do not support this parameter.",
     "searchApiKeyPlaceholder": "Please enter your Api Key",
+    "searchScope": "Search Scope",
+    "all": "All",
+    "academic": "Academic",
     "language": "Language",
     "languageTip": "The system will automatically select the interface language based on the user's browser language. At the same time, it will also affect the response language of the AI ​​model.",
     "system": "System",

@@ -606,5 +606,29 @@ export async function middleware(request: NextRequest) {
       });
     }
   }
+  if (request.nextUrl.pathname.startsWith("/api/crawler")) {
+    const authorization = request.headers.get("authorization") || "";
+    if (
+      request.method.toUpperCase() !== "POST" ||
+      !verifySignature(authorization.substring(7), accessPassword, Date.now())
+    ) {
+      return NextResponse.json(
+        { error: ERRORS.NO_PERMISSIONS },
+        { status: 403 }
+      );
+    } else {
+      const requestHeaders = new Headers();
+      requestHeaders.set(
+        "Content-Type",
+        request.headers.get("Content-Type") || "application/json"
+      );
+      requestHeaders.delete("Authorization");
+      return NextResponse.next({
+        request: {
+          headers: requestHeaders,
+        },
+      });
+    }
+  }
   return NextResponse.next();
 }

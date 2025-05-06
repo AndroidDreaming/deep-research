@@ -42,6 +42,7 @@ const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_VERSION: pkg.version,
   },
+  transpilePackages: ["pdfjs-dist", "mermaid"],
 };
 
 if (BUILD_MODE === "export") {

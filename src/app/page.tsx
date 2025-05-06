@@ -6,7 +6,7 @@ import { useTheme } from "next-themes";
 import { useGlobalStore } from "@/store/global";
 import { useSettingStore } from "@/store/setting";
 
-const Header = dynamic(() => import("@/components/Header"));
+const Header = dynamic(() => import("@/components/Internal/Header"));
 const Setting = dynamic(() => import("@/components/Setting"));
 const Topic = dynamic(() => import("@/components/Research/Topic"));
 const Feedback = dynamic(() => import("@/components/Research/Feedback"));
@@ -15,10 +15,18 @@ const SearchResult = dynamic(
 );
 const FinalReport = dynamic(() => import("@/components/Research/FinalReport"));
 const History = dynamic(() => import("@/components/History"));
+const Knowledge = dynamic(() => import("@/components/Knowledge"));
 
 function Home() {
   const { t } = useTranslation();
-  const globalStore = useGlobalStore();
+  const {
+    openSetting,
+    setOpenSetting,
+    openHistory,
+    setOpenHistory,
+    openKnowledge,
+    setOpenKnowledge,
+  } = useGlobalStore();
 
   const { theme } = useSettingStore();
   const { setTheme } = useTheme();
@@ -28,7 +36,7 @@ function Home() {
     setTheme(settingStore.theme);
   }, [theme, setTheme]);
   return (
-    <div className="max-w-screen-md mx-auto px-4">
+    <div className="max-lg:max-w-screen-md max-w-screen-lg mx-auto px-4">
       <Header />
       <main>
         <Topic />
@@ -44,13 +52,11 @@ function Home() {
         </a>
       </footer>
       <aside className="print:hidden">
-        <Setting
-          open={globalStore.openSetting}
-          onClose={() => globalStore.setOpenSetting(false)}
-        />
-        <History
-          open={globalStore.openHistory}
-          onClose={() => globalStore.setOpenHistory(false)}
+        <Setting open={openSetting} onClose={() => setOpenSetting(false)} />
+        <History open={openHistory} onClose={() => setOpenHistory(false)} />
+        <Knowledge
+          open={openKnowledge}
+          onClose={() => setOpenKnowledge(false)}
         />
       </aside>
     </div>

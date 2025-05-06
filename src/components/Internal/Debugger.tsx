@@ -32,7 +32,7 @@ function Debugger() {
   return debug === "enable" ? (
     <Script
       id="eruda"
-      src="https://cdn.jsdelivr.net/npm/eruda"
+      src="./scripts/eruda.min.js"
       onLoad={() => setup()}
     ></Script>
   ) : null;

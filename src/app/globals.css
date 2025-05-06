@@ -116,8 +116,6 @@
 
 @page {
   size: "A4";
-  /* Hide print header and footer */
-  margin: 0mm;
 }
 
 .float-menu-button {
@@ -130,4 +128,14 @@
 
 .from-item {
   @apply grid grid-cols-4 gap-2 max-sm:gap-1 space-y-0 items-center;
+}
+
+.text-line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

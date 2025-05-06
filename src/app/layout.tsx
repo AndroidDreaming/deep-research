@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import ThemeProvider from "@/components/Provider/Theme";
 import I18Provider from "@/components/Provider/I18n";
-import Debugger from "@/components/Debugger";
+import Debugger from "@/components/Internal/Debugger";
 import { Toaster } from "@/components/ui/sonner";
 
 import "./globals.css";

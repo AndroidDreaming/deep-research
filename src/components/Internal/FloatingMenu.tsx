@@ -12,12 +12,14 @@ type FloatingMenuProps = {
   children: ReactNode;
   //Offset from the top of the browser when fixed (optional)
   fixedTopOffset?: number;
+  fixedRightOffset?: number;
 };
 
 function FloatingMenu({
   targetRef,
   children,
   fixedTopOffset = 10,
+  fixedRightOffset = 0,
 }: FloatingMenuProps) {
   const [isFixed, setIsFixed] = useState(false);
   const [fixedTop, setFixedTop] = useState<number>(0);
@@ -68,7 +70,7 @@ function FloatingMenu({
       style={{
         position: isFixed ? "fixed" : "absolute",
         top: isFixed ? fixedTop : 0,
-        right: isFixed ? fixedRight : 0,
+        right: fixedRightOffset + (isFixed ? fixedRight : 0),
         // Make sure the menu is above the content
         zIndex: 30,
       }}

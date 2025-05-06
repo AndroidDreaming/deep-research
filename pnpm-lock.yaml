@@ -132,7 +132,7 @@ importers:
         specifier: ^6.2.0
         version: 6.2.0
       pdfjs-dist:
-        specifier: ^5.2.133
+        specifier: 5.2.133
         version: 5.2.133
       radash:
         specifier: ^12.1.0

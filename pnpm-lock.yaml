@@ -132,8 +132,8 @@ importers:
         specifier: ^6.2.0
         version: 6.2.0
       pdfjs-dist:
-        specifier: ^5.1.91
-        version: 5.1.91
+        specifier: ^5.2.133
+        version: 5.2.133
       radash:
         specifier: ^12.1.0
         version: 12.1.0
@@ -3175,7 +3175,7 @@ packages:
   pathe@2.0.3:
     resolution: {integrity: sha512-WUjGcAqP1gQacoQe+OBJsFA7Ld4DyXuUIjZ5cc75cLHvJ7dtNsTugphxIADwspS+AraAUePCKrSVtPLFj/F88w==}
 
-  pdfjs-dist@5.1.91:
+  pdfjs-dist@5.2.133:
     resolution: {integrity: sha512-qSIADdagooJB4wWCBnrBJjRvASevmxL0BwafvOuKJG5uTQdYoFBrhrRYnucKNiSc9qS6JIk0hC5y1yktFljXkA==}
     engines: {node: '>=20'}
 
@@ -7515,7 +7515,7 @@ snapshots:
 
   pathe@2.0.3: {}
 
-  pdfjs-dist@5.1.91:
+  pdfjs-dist@5.2.133:
     optionalDependencies:
       '@napi-rs/canvas': 0.1.69
 

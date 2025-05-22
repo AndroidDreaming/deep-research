@@ -7,6 +7,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
+import { useMobile } from "@/hooks/useMobile";
 import { cn } from "@/utils/style";
 
 import "./style.css";
@@ -14,11 +15,18 @@ import "./style.css";
 type EditorProps = {
   className?: string;
   defaultValue: string;
+  hideView?: boolean;
   onChange: (value: string) => void;
 };
 
-function Editor({ className, defaultValue, onChange }: EditorProps) {
+function Editor({
+  className,
+  defaultValue,
+  onChange,
+  hideView = false,
+}: EditorProps) {
   const { t } = useTranslation();
+  const isMobile = useMobile(750);
   const markdownEditorRef = useRef<HTMLDivElement>(null);
   const [markdownEditor, setMarkdownEditor] = useState<MagicdownEditor>();
   const [content, setContent] = useState<string>(defaultValue);
@@ -155,12 +163,16 @@ function Editor({ className, defaultValue, onChange }: EditorProps) {
           onBlur={() => onChange(content)}
         ></div>
       </ResizablePanel>
-      <ResizableHandle />
-      <ResizablePanel>
-        <div className="magicdown-view flex-1 prose prose-slate dark:prose-invert max-w-full p-2">
-          <View>{content}</View>
-        </div>
-      </ResizablePanel>
+      {isMobile || hideView ? null : (
+        <>
+          <ResizableHandle />
+          <ResizablePanel>
+            <div className="magicdown-view flex-1 prose prose-slate dark:prose-invert overflow-auto max-w-full p-2">
+              <View>{content}</View>
+            </div>
+          </ResizablePanel>
+        </>
+      )}
     </ResizablePanelGroup>
   );
 }

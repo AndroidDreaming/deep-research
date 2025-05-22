@@ -1,4 +1,6 @@
 import type { NextConfig } from "next";
+import withSerwistInit from "@serwist/next";
+import { PHASE_PRODUCTION_BUILD } from "next/constants.js";
 import pkg from "./package.json";
 
 const BUILD_MODE = process.env.NEXT_PUBLIC_BUILD_MODE;
@@ -16,6 +18,9 @@ const ANTHROPIC_API_BASE_URL =
 const DEEPSEEK_API_BASE_URL =
   process.env.DEEPSEEK_API_BASE_URL || "https://api.deepseek.com";
 const XAI_API_BASE_URL = process.env.XAI_API_BASE_URL || "https://api.x.ai";
+const MISTRAL_API_BASE_URL =
+  process.env.MISTRAL_API_BASE_URL || "https://api.mistral.ai";
+const AZURE_API_BASE_URL = `https://${process.env.AZURE_RESOURCE_NAME}.openai.azure.com/openai/deployments`;
 const OPENAI_COMPATIBLE_API_BASE_URL =
   process.env.OPENAI_COMPATIBLE_API_BASE_URL || "";
 const POLLINATIONS_API_BASE_URL =
@@ -34,98 +39,120 @@ const BOCHA_API_BASE_URL =
 const SEARXNG_API_BASE_URL =
   process.env.SEARXNG_API_BASE_URL || "http://0.0.0.0:8080";
 
-const nextConfig: NextConfig = {
-  /* config options here */
-  experimental: {
-    reactCompiler: true,
-  },
-  env: {
-    NEXT_PUBLIC_VERSION: pkg.version,
-  },
-  transpilePackages: ["pdfjs-dist", "mermaid"],
-};
+export default async function Config(phase: string) {
+  const nextConfig: NextConfig = {
+    /* config options here */
+    experimental: {
+      reactCompiler: true,
+    },
+    env: {
+      NEXT_PUBLIC_VERSION: pkg.version,
+    },
+    transpilePackages: ["pdfjs-dist", "mermaid"],
+  };
 
-if (BUILD_MODE === "export") {
-  nextConfig.output = "export";
-  // Only used for static deployment, the default deployment directory is the root directory
-  nextConfig.basePath = "";
-  // Statically exporting a Next.js application via `next export` disables API routes and middleware.
-  nextConfig.webpack = (config) => {
-    config.module.rules.push({
-      test: /src\/app\/api/,
-      loader: "ignore-loader",
+  if (BUILD_MODE === "export") {
+    nextConfig.output = "export";
+    // Only used for static deployment, the default deployment directory is the root directory
+    nextConfig.basePath = "";
+    // Statically exporting a Next.js application via `next export` disables API routes and middleware.
+    nextConfig.webpack = (config) => {
+      config.module.rules.push({
+        test: /src\/app\/api/,
+        loader: "ignore-loader",
+      });
+      config.module.rules.push({
+        test: /src\/middleware/,
+        loader: "ignore-loader",
+      });
+      return config;
+    };
+  } else if (BUILD_MODE === "standalone") {
+    nextConfig.output = "standalone";
+  } else {
+    nextConfig.rewrites = async () => {
+      return [
+        {
+          source: "/api/ai/google/:path*",
+          destination: `${
+            GOOGLE_GENERATIVE_AI_API_BASE_URL || API_PROXY_BASE_URL
+          }/:path*`,
+        },
+        {
+          source: "/api/ai/openrouter/:path*",
+          destination: `${OPENROUTER_API_BASE_URL}/:path*`,
+        },
+        {
+          source: "/api/ai/openai/:path*",
+          destination: `${OPENAI_API_BASE_URL}/:path*`,
+        },
+        {
+          source: "/api/ai/anthropic/:path*",
+          destination: `${ANTHROPIC_API_BASE_URL}/:path*`,
+        },
+        {
+          source: "/api/ai/deepseek/:path*",
+          destination: `${DEEPSEEK_API_BASE_URL}/:path*`,
+        },
+        {
+          source: "/api/ai/xai/:path*",
+          destination: `${XAI_API_BASE_URL}/:path*`,
+        },
+        {
+          source: "/api/ai/mistral/:path*",
+          destination: `${MISTRAL_API_BASE_URL}/:path*`,
+        },
+        {
+          source: "/api/ai/azure/:path*",
+          destination: `${AZURE_API_BASE_URL}/:path*`,
+        },
+        {
+          source: "/api/ai/openaicompatible/:path*",
+          destination: `${OPENAI_COMPATIBLE_API_BASE_URL}/:path*`,
+        },
+        {
+          source: "/api/ai/pollinations/:path*",
+          destination: `${POLLINATIONS_API_BASE_URL}/:path*`,
+        },
+        {
+          source: "/api/ai/ollama/:path*",
+          destination: `${OLLAMA_API_BASE_URL}/:path*`,
+        },
+        {
+          source: "/api/search/tavily/:path*",
+          destination: `${TAVILY_API_BASE_URL}/:path*`,
+        },
+        {
+          source: "/api/search/firecrawl/:path*",
+          destination: `${FIRECRAWL_API_BASE_URL}/:path*`,
+        },
+        {
+          source: "/api/search/exa/:path*",
+          destination: `${EXA_API_BASE_URL}/:path*`,
+        },
+        {
+          source: "/api/search/bocha/:path*",
+          destination: `${BOCHA_API_BASE_URL}/:path*`,
+        },
+        {
+          source: "/api/search/searxng/:path*",
+          destination: `${SEARXNG_API_BASE_URL}/:path*`,
+        },
+      ];
+    };
+  }
+
+  if (phase === PHASE_PRODUCTION_BUILD) {
+    const withSerwist = withSerwistInit({
+      // Note: This is only an example. If you use Pages Router,
+      // use something else that works, such as "service-worker/index.ts".
+      swSrc: "src/app/sw.ts",
+      swDest: "public/sw.js",
+      register: false,
     });
-    config.module.rules.push({
-      test: /src\/middleware/,
-      loader: "ignore-loader",
-    });
-    return config;
-  };
-} else if (BUILD_MODE === "standalone") {
-  nextConfig.output = "standalone";
-} else {
-  nextConfig.rewrites = async () => {
-    return [
-      {
-        source: "/api/ai/google/:path*",
-        destination: `${
-          GOOGLE_GENERATIVE_AI_API_BASE_URL || API_PROXY_BASE_URL
-        }/:path*`,
-      },
-      {
-        source: "/api/ai/openrouter/:path*",
-        destination: `${OPENROUTER_API_BASE_URL}/:path*`,
-      },
-      {
-        source: "/api/ai/openai/:path*",
-        destination: `${OPENAI_API_BASE_URL}/:path*`,
-      },
-      {
-        source: "/api/ai/anthropic/:path*",
-        destination: `${ANTHROPIC_API_BASE_URL}/:path*`,
-      },
-      {
-        source: "/api/ai/deepseek/:path*",
-        destination: `${DEEPSEEK_API_BASE_URL}/:path*`,
-      },
-      {
-        source: "/api/ai/xai/:path*",
-        destination: `${XAI_API_BASE_URL}/:path*`,
-      },
-      {
-        source: "/api/ai/openaicompatible/:path*",
-        destination: `${OPENAI_COMPATIBLE_API_BASE_URL}/:path*`,
-      },
-      {
-        source: "/api/ai/pollinations/:path*",
-        destination: `${POLLINATIONS_API_BASE_URL}/:path*`,
-      },
-      {
-        source: "/api/ai/ollama/:path*",
-        destination: `${OLLAMA_API_BASE_URL}/:path*`,
-      },
-      {
-        source: "/api/search/tavily/:path*",
-        destination: `${TAVILY_API_BASE_URL}/:path*`,
-      },
-      {
-        source: "/api/search/firecrawl/:path*",
-        destination: `${FIRECRAWL_API_BASE_URL}/:path*`,
-      },
-      {
-        source: "/api/search/exa/:path*",
-        destination: `${EXA_API_BASE_URL}/:path*`,
-      },
-      {
-        source: "/api/search/bocha/:path*",
-        destination: `${BOCHA_API_BASE_URL}/:path*`,
-      },
-      {
-        source: "/api/search/searxng/:path*",
-        destination: `${SEARXNG_API_BASE_URL}/:path*`,
-      },
-    ];
-  };
+
+    return withSerwist(nextConfig);
+  }
+
+  return nextConfig;
 }
-
-export default nextConfig;

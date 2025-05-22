@@ -6,68 +6,22 @@ import { useKnowledgeStore } from "@/store/knowledge";
 import { useTaskStore } from "@/store/task";
 import { useSettingStore } from "@/store/setting";
 import { rewritingPrompt } from "@/constants/prompts";
+import { jinaReader, localCrawler } from "@/utils/crawler";
 import { fileParser } from "@/utils/parser";
-import { generateSignature } from "@/utils/signature";
 import { getTextByteSize } from "@/utils/file";
+import { splitText } from "@/utils/text";
 import { parseError } from "@/utils/error";
 import { omit } from "radash";
 
-interface CrawlerResult {
-  url: string;
-  title: string;
-  content: string;
-}
-
-interface ReaderResult extends CrawlerResult {
-  warning?: string;
-  title: string;
-  description: string;
-  url: string;
-  content: string;
-  usage: {
-    tokens: number;
-  };
-}
+const MAX_CHUNK_LENGTH = 10000;
 
 function handleError(error: unknown) {
   const errorMessage = parseError(error);
   toast.error(errorMessage);
 }
 
-async function jinaReader(url: string) {
-  const response = await fetch("https://r.jina.ai", {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ url }),
-  });
-
-  const { data }: { data: ReaderResult } = await response.json();
-  if (data.warning) {
-    throw new Error(data.warning);
-  }
-  return omit(data, ["usage", "description"]) as CrawlerResult;
-}
-
-async function localCrawler(url: string) {
-  const { accessPassword } = useSettingStore.getState();
-  const accessKey = generateSignature(accessPassword, Date.now());
-  const response = await fetch("/api/crawler", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${accessKey}`,
-    },
-    body: JSON.stringify({ url }),
-  });
-  const result: CrawlerResult = await response.json();
-  return result;
-}
-
 function useKnowledge() {
-  const { createProvider, getModel } = useModelProvider();
+  const { createModelProvider, getModel } = useModelProvider();
   const knowledgeStore = useKnowledgeStore();
 
   function generateId(
@@ -106,6 +60,38 @@ function useKnowledge() {
     if (isExist) {
       return toast.message(`File already exist: ${file.name}`);
     }
+
+    async function extractText(rid: string, title: string, text: string) {
+      const { networkingModel } = getModel();
+
+      let content = "";
+      const result = streamText({
+        model: await createModelProvider(networkingModel),
+        prompt: text,
+        system: rewritingPrompt,
+        onFinish: () => {
+          const currentTime = Date.now();
+          knowledgeStore.save({
+            id: rid,
+            title,
+            content,
+            type: "file",
+            fileMeta,
+            createdAt: currentTime,
+            updatedAt: currentTime,
+          });
+        },
+        onError: (err) => {
+          updateResource(id, { status: "failed" });
+          handleError(err);
+        },
+      });
+      for await (const textPart of result.textStream) {
+        content += textPart;
+      }
+      return content;
+    }
+
     try {
       if (knowledgeStore.exist(id)) {
         const knowledge = knowledgeStore.get(id);
@@ -124,38 +110,41 @@ function useKnowledge() {
           id,
           status: "processing",
         });
-        const { networkingModel } = getModel();
+
         const text = await fileParser(file);
-        if (text.length > 204800 || !file.type.startsWith("text/")) {
-          let content = "";
-          const result = streamText({
-            model: createProvider(networkingModel),
-            prompt: text,
-            system: rewritingPrompt,
-            onFinish: () => {
-              const currentTime = Date.now();
-              knowledgeStore.save({
-                id,
-                title: fileMeta.name,
-                content,
-                type: "file",
-                fileMeta,
-                createdAt: currentTime,
-                updatedAt: currentTime,
+        if (text.length > MAX_CHUNK_LENGTH || !file.type.startsWith("text/")) {
+          const chunks = splitText(text, MAX_CHUNK_LENGTH);
+          for (const idx in chunks) {
+            const chunk = chunks[idx];
+            const index = Number(idx);
+            let rid = id;
+            const names = fileMeta.name.split(".");
+            const filename = `${names[0]}-${index + 1}.${names[1] || "txt"}`;
+
+            if (index > 0) {
+              rid = `${id}_${index}`;
+              addResource({
+                ...omit(fileMeta, ["lastModified"]),
+                id: rid,
+                name: filename,
+                size: getTextByteSize(chunk),
+                status: "processing",
               });
-            },
-            onError: (err) => {
-              updateResource(id, { status: "failed" });
-              handleError(err);
-            },
-          });
-          for await (const textPart of result.textStream) {
-            content += textPart;
+            } else {
+              updateResource(rid, {
+                name: filename,
+                size: getTextByteSize(chunk),
+                status: "processing",
+              });
+            }
+
+            const content = await extractText(rid, filename, chunk);
+            updateResource(rid, {
+              name: filename,
+              size: getTextByteSize(content),
+              status: "completed",
+            });
           }
-          updateResource(id, {
-            size: getTextByteSize(content),
-            status: "completed",
-          });
         } else {
           knowledgeStore.save({
             id,
@@ -229,10 +218,11 @@ function useKnowledge() {
           });
         } else if (crawler === "local") {
           const { networkingModel } = getModel();
-          const result = await localCrawler(url);
+          const { accessPassword } = useSettingStore.getState();
+          const result = await localCrawler(url, accessPassword);
           let content = "";
           const stream = streamText({
-            model: createProvider(networkingModel),
+            model: await createModelProvider(networkingModel),
             prompt: result.content,
             system: rewritingPrompt,
             onFinish: () => {

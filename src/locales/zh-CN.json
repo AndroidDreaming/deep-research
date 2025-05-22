@@ -15,7 +15,7 @@
       "restartResearch": "重新研究",
       "writeReport": "撰写报告",
       "continueResearch": "继续研究",
-      "indepthResearch": "深度研究",
+      "indepthResearch": "进一步研究",
       "rewriteReport": "重写报告",
       "sources": "资料来源",
       "thinking": "思考中...",
@@ -49,7 +49,8 @@
       "emptyTip": "等待分配研究任务...",
       "suggestionLabel": "研究建议（可选）",
       "suggestionPlaceholder": "是否增加或者调整研究方向...",
-      "references": "参考文献"
+      "references": "参考文献",
+      "relatedImages": "相关图片"
     },
     "finalReport": {
       "title": "4. 最终报告",
@@ -138,8 +139,21 @@
     "addEmojis": "添加表情",
     "send": "发送"
   },
+  "knowledgeGraph": {
+    "action": "生成知识图谱",
+    "regenerate": "重新生成",
+    "edit": "编辑",
+    "view": "查看"
+  },
   "editor": {
     "copy": "复制",
+    "mermaid": {
+      "downloadSvg": "下载为图片",
+      "copyText": "复制文本",
+      "zoomIn": "放大",
+      "zoomOut": "缩小",
+      "resize": "重置大小"
+    },
     "tooltip": {
       "bold": "粗体",
       "italic": "斜体",
@@ -233,7 +247,7 @@
     "title": "设置",
     "description": "所有设置都将保存在您的浏览器中。",
     "model": "语言模型",
-    "general": "通用设置",
+    "general": "系统设置",
     "provider": "AI 服务",
     "providerTip": "AI 服务提供商。对于 One API 和 New API 这类 AI 聚合服务，请选择 `兼容 OpenAI`。",
     "openAICompatible": "OpenAI 兼容",
@@ -246,6 +260,10 @@
     "apiKeyPlaceholder": "请输入模型 API 密钥",
     "apiUrlLabel": "API 基础 URL",
     "apiUrlPlaceholder": "请输入 API 基础 URL",
+    "resourceNameLabel": "资源名称",
+    "resourceNamePlaceholder": "请输入资源名称",
+    "apiVersionLabel": "API 版本",
+    "apiVersionPlaceholder": "请输入 API 版本",
     "accessPassword": "访问密码",
     "accessPasswordPlaceholder": "请输入服务器访问密码",
     "accessPasswordTip": "服务端 API 鉴权，避免 API 被外部应用盗用。",
@@ -259,7 +277,7 @@
     "modelListPlaceholder": "请输入模型名称",
     "refresh": "点击刷新模型",
     "modelListLoading": "模型列表加载中",
-    "search": "搜索设置",
+    "search": "搜索参数",
     "webSearch": "联网搜索",
     "webSearchTip": "开启联网搜索功能可以获取最新数据，有利于减少大语言模型的“幻觉”。强烈推荐启用。",
     "enable": "启用",
@@ -283,11 +301,19 @@
     "dark": "黑暗",
     "debug": "调试模式",
     "debugTip": "系统调试可以帮助用户捕捉请求异常，定位未知错误。通常情况下无需开启。",
+    "PWA": "安装PWA",
+    "PWATip": "渐进式 Web 应用是一个使用 web 平台技术构建的应用程序，它提供与原生应用程序相近的用户体验。",
+    "installlPWA": "安装浏览器应用(PWA)",
     "resetSetting": "重置设置",
     "resetAllSettings": "重置设置并清空缓存",
     "resetSettingWarning": "此操作将清空所有数据并初始化项目",
     "version": "当前版本",
     "checkForUpdate": "检查更新",
+    "experimental": "🧪 实验性",
+    "references": "参考文献",
+    "referencesTip": "启用参考文献，将通过 prompt 给搜索结果和最终报告中加入引用链接。对于一些小模型，效果可能不佳。",
+    "citationImage": "引用图片",
+    "citationImageTip": "启用引用图片，会通过 prompt 尝试在最终报告中添加与内容相关的图片。",
     "save": "保存",
     "confirm": "确认",
     "cancel": "取消"

@@ -24,10 +24,16 @@ interface Knowledge {
   updatedAt: number;
 }
 
+interface ImageSource {
+  url: string;
+  description?: string;
+}
+
 interface Source {
   title?: string;
   content?: string;
   url: string;
+  images?: ImageSource[];
 }
 
 interface SearchTask {
@@ -36,6 +42,7 @@ interface SearchTask {
   researchGoal: string;
   learning: string;
   sources: Source[];
+  images: ImageSource[];
 }
 
 interface PartialJson {

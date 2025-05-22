@@ -16,10 +16,21 @@ type Props = {
   className?: string;
   value: string;
   onChange: (value: string) => void;
+  hideTools?: boolean;
+  fixedTopOffset?: number;
+  fixedRightOffset?: number;
   tools?: ReactNode;
 };
 
-function MagicDown({ value, onChange, className, tools }: Props) {
+function MagicDown({
+  value,
+  onChange,
+  className,
+  hideTools,
+  fixedTopOffset,
+  fixedRightOffset,
+  tools,
+}: Props) {
   const { t } = useTranslation();
   const isMobile = useMobile(450);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -45,55 +56,57 @@ function MagicDown({ value, onChange, className, tools }: Props) {
           <Editor defaultValue={value} onChange={onChange}></Editor>
         </div>
       )}
-      <FloatingMenu
-        targetRef={containerRef}
-        fixedTopOffset={16}
-        fixedRightOffset={isMobile ? 0 : -70}
-      >
-        <div className="flex flex-col gap-1 border rounded-full py-2 p-1 bg-white dark:bg-slate-800 max-sm:opacity-80 max-sm:hover:opacity-100 print:hidden">
-          {mode === "view" ? (
-            <Button
-              className="float-menu-button"
-              title={t("research.common.edit")}
-              side="left"
-              sideoffset={8}
-              size="icon"
-              variant="ghost"
-              onClick={() => setMode("editor")}
-            >
-              <FilePenLine />
-            </Button>
-          ) : (
-            <Button
-              className="float-menu-button"
-              title={t("research.common.save")}
-              side="left"
-              sideoffset={8}
-              size="icon"
-              variant="ghost"
-              onClick={() => setMode("view")}
-            >
-              <Save />
-            </Button>
-          )}
-          <Button
-            className="float-menu-button"
-            title={t("research.common.copy")}
-            side="left"
-            sideoffset={8}
-            size="icon"
-            variant="ghost"
-            onClick={() => handleCopy()}
-          >
-            {waitingCopy ? (
-              <CopyCheck className="h-full w-full text-green-500" />
+      {!hideTools ? (
+        <FloatingMenu
+          targetRef={containerRef}
+          fixedTopOffset={fixedTopOffset ?? 16}
+          fixedRightOffset={fixedRightOffset ?? (isMobile ? 0 : -70)}
+        >
+          <div className="flex flex-col gap-1 border rounded-full py-2 p-1 bg-white dark:bg-slate-800 max-sm:opacity-80 max-sm:hover:opacity-100 print:hidden">
+            {mode === "view" ? (
+              <Button
+                className="float-menu-button"
+                title={t("research.common.edit")}
+                side="left"
+                sideoffset={8}
+                size="icon"
+                variant="ghost"
+                onClick={() => setMode("editor")}
+              >
+                <FilePenLine />
+              </Button>
             ) : (
-              <Copy className="h-full w-full" />
+              <Button
+                className="float-menu-button"
+                title={t("research.common.save")}
+                side="left"
+                sideoffset={8}
+                size="icon"
+                variant="ghost"
+                onClick={() => setMode("view")}
+              >
+                <Save />
+              </Button>
             )}
-          </Button>
-          {tools ? tools : null}
-        </div>
-      </FloatingMenu>
+            <Button
+              className="float-menu-button"
+              title={t("research.common.copy")}
+              side="left"
+              sideoffset={8}
+              size="icon"
+              variant="ghost"
+              onClick={() => handleCopy()}
+            >
+              {waitingCopy ? (
+                <CopyCheck className="h-full w-full text-green-500" />
+              ) : (
+                <Copy className="h-full w-full" />
+              )}
+            </Button>
+            {tools ? tools : null}
+          </div>
+        </FloatingMenu>
+      ) : null}
     </div>
   );
 }

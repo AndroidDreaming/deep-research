@@ -127,7 +127,13 @@
 }
 
 .from-item {
-  @apply grid grid-cols-4 gap-2 max-sm:gap-1 space-y-0 items-center;
+  @apply grid grid-cols-4 gap-2 max-sm:gap-1 space-y-0 items-center lg:grid-cols-6;
+}
+.from-label {
+  @apply col-span-1 lg:col-span-2 lg:pl-1 overflow-hidden;
+}
+.form-field {
+  @apply col-span-3 lg:col-span-4;
 }
 
 .text-line-clamp-2 {

@@ -84,6 +84,7 @@ function Content({ id, editClassName, onSubmit, onBack }: Props) {
                 <MagicDownEditor
                   className={editClassName}
                   defaultValue={field.value}
+                  hideView={true}
                   onChange={field.onChange}
                 />
               </FormControl>

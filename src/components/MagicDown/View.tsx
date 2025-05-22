@@ -6,7 +6,9 @@ import remarkMath from "remark-math";
 import remarkBreaks from "remark-breaks";
 import rehypeHighlight from "rehype-highlight";
 import rehypeKatex from "rehype-katex";
+import { useSettingStore } from "@/store/setting";
 import { clsx } from "clsx";
+import { animateText } from "@/utils/animate-text";
 import { omit } from "radash";
 
 import "katex/dist/katex.min.css";
@@ -17,6 +19,8 @@ const Code = dynamic(() => import("./Code"));
 const Mermaid = dynamic(() => import("./Mermaid"));
 
 function Magicdown({ children: content, ...rest }: Options) {
+  const { language } = useSettingStore();
+
   const remarkPlugins = useMemo(
     () => rest.remarkPlugins ?? [],
     [rest.remarkPlugins]
@@ -34,6 +38,7 @@ function Magicdown({ children: content, ...rest }: Options) {
       rehypePlugins={[
         [rehypeHighlight, { detect: true, ignoreMissing: true }],
         rehypeKatex,
+        animateText(language),
         ...rehypePlugins,
       ]}
       components={{
@@ -105,6 +110,27 @@ function Magicdown({ children: content, ...rest }: Options) {
             >
               {children}
             </a>
+          );
+        },
+        img: (props) => {
+          const { className, src, alt, ...rest } = props;
+          return (
+            <picture
+              className={clsx(
+                "my-2 flex justify-center items-center w-4/5 max-sm:w-full h-[50vw] max-sm:h-80 m-auto",
+                className
+              )}
+            >
+              <img
+                className="size-full object-cover rounded transition-all duration-200 ease-out"
+                {...omit(rest, ["node"])}
+                src={src}
+                alt={alt}
+                title={alt}
+                referrerPolicy="no-referrer"
+                rel="noopener noreferrer"
+              />
+            </picture>
           );
         },
         ...components,

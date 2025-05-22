@@ -116,31 +116,31 @@ John-->>Alice: Great! How about you?
 
 -   **Avoid placing mathematical formulas in code blocks**. Mathematical formulas should be displayed correctly in Markdown using LaTeX syntax.
 -   **Ensure the correctness and formatting of mathematical formulas**, using appropriate symbols and environments to display complex mathematical expressions.
--   **When generating a mermaid diagram**, if you use words other than English, you need to wrap them with \`"\`.
+-   **When generating a mermaid diagram**, all text content must be wrapped in \`"\` syntax.
 
 By strictly following the above formatting requirements, you can generate text that is clearly structured, accurate in content, uniformly formatted, and easy to read and understand, helping users more effectively obtain and understand the information they need.
 </OutputGuidelines>`;
 
 export const systemQuestionPrompt = `Given the following query from the user, ask at least 5 follow-up questions to clarify the research direction:
 
-<query>
+<QUERY>
 {query}
-</query>
+</QUERY>
 
 Questions need to be brief and concise. No need to output content that is irrelevant to the question.`;
 
 export const guidelinesPrompt = `Integration guidelines:
-<guidelines>
+<GUIDELINES>
 - Ensure each section has a distinct purpose with no content overlap.
 - Combine related concepts rather than separating them.
 - CRITICAL: Every section MUST be directly relevant to the main topic.
 - Avoid tangential or loosely related sections that don't directly address the core topic.
-</guidelines>`;
+</GUIDELINES>`;
 
 export const reportPlanPrompt = `Given the following query from the user:
-<query>
+<QUERY>
 {query}
-</query>
+</QUERY>
 
 Generate a list of sections for the report based on the topic and feedback.
 Your plan should be tight and focused with NO overlapping sections or unnecessary filler. Each section needs a sentence summarizing its content.
@@ -167,25 +167,29 @@ Expected output:
 \`\`\``;
 
 export const serpQueriesPrompt = `This is the report plan after user confirmation:
-<plan>
+<PLAN>
 {plan}
-</plan>
+</PLAN>
 
 Based on previous report plan, generate a list of SERP queries to further research the topic. Make sure each query is unique and not similar to each other.
 
 ${serpQuerySchemaPrompt}`;
 
 export const queryResultPrompt = `Please use the following query to get the latest information via the web:
-<query>
+<QUERY>
 {query}
-</query>
+</QUERY>
 
 You need to organize the searched information according to the following requirements:
-<researchGoal>
+<RESEARCH_GOAL>
 {researchGoal}
-</researchGoal>
+</RESEARCH_GOAL>
 
-You need to think like a human researcher. Generate a list of learnings from the search results. Make sure each learning is unique and not similar to each other. The learnings should be to the point, as detailed and information dense as possible. Make sure to include any entities like people, places, companies, products, things, etc in the learnings, as well as any specific entities, metrics, numbers, and dates when available. The learnings will be used to research the topic further.`;
+You need to think like a human researcher.
+Generate a list of learnings from the search results.
+Make sure each learning is unique and not similar to each other.
+The learnings should be to the point, as detailed and information dense as possible.
+Make sure to include any entities like people, places, companies, products, things, etc in the learnings, as well as any specific entities, metrics, numbers, and dates when available. The learnings will be used to research the topic further.`;
 
 export const citationRulesPrompt = `Citation Rules:
 
@@ -194,91 +198,126 @@ export const citationRulesPrompt = `Citation Rules:
 - If a sentence comes from multiple contexts, please list all relevant citation numbers, e.g., [1][2]. Remember not to group citations at the end but list them in the corresponding parts of your answer.`;
 
 export const searchResultPrompt = `Given the following contexts from a SERP search for the query:
-<query>
+<QUERY>
 {query}
-</query>
+</QUERY>
 
 You need to organize the searched information according to the following requirements:
-<researchGoal>
+<RESEARCH_GOAL>
 {researchGoal}
-</researchGoal>
+</RESEARCH_GOAL>
 
-The following contexts from the SERP search:
-<context>
+The following context from the SERP search:
+<CONTEXT>
 {context}
-</context>
+</CONTEXT>
 
-You need to think like a human researcher. Generate a list of learnings from the contexts. Make sure each learning is unique and not similar to each other. The learnings should be to the point, as detailed and information dense as possible. Make sure to include any entities like people, places, companies, products, things, etc in the learnings, as well as any specific entities, metrics, numbers, and dates when available. The learnings will be used to research the topic further.
-
-${citationRulesPrompt}`;
+You need to think like a human researcher.
+Generate a list of learnings from the contexts.
+Make sure each learning is unique and not similar to each other.
+The learnings should be to the point, as detailed and information dense as possible.
+Make sure to include any entities like people, places, companies, products, things, etc in the learnings, as well as any specific entities, metrics, numbers, and dates when available. The learnings will be used to research the topic further.`;
 
 export const searchKnowledgeResultPrompt = `Given the following contents from a local knowledge base search for the query:
-<query>
+<QUERY>
 {query}
-</query>
+</QUERY>
 
 You need to organize the searched information according to the following requirements:
-<researchGoal>
+<RESEARCH_GOAL>
 {researchGoal}
-</researchGoal>
+</RESEARCH_GOAL>
 
 The following contexts from the SERP search:
-<context>
+<CONTEXT>
 {context}
-</context>
+</CONTEXT>
 
-You need to think like a human researcher. Generate a list of learnings from the contents. Make sure each learning is unique and not similar to each other. The learnings should be to the point, as detailed and information dense as possible. Make sure to include any entities like people, places, companies, products, things, etc in the learnings, as well as any specific entities, metrics, numbers, and dates when available. The learnings will be used to research the topic further.`;
+You need to think like a human researcher.
+Generate a list of learnings from the contents.
+Make sure each learning is unique and not similar to each other.
+The learnings should be to the point, as detailed and information dense as possible.
+Make sure to include any entities like people, places, companies, products, things, etc in the learnings, as well as any specific entities, metrics, numbers, and dates when available. The learnings will be used to research the topic further.`;
 
 export const reviewPrompt = `This is the report plan after user confirmation:
-<plan>
+<PLAN>
 {plan}
-</plan>
+</PLAN>
 
 Here are all the learnings from previous research:
-<learnings>
+<LEARNINGS>
 {learnings}
-</learnings>
+</LEARNINGS>
 
 This is the user's suggestion for research direction:
-<suggestion>
+<SUGGESTION>
 {suggestion}
-</suggestion>
+</SUGGESTION>
 
-Based on previous research and user research suggestions, determine whether further research is needed. If further research is needed, list of follow-up SERP queries to research the topic further. Make sure each query is unique and not similar to each other. If you believe no further research is needed, you can output an empty queries.
+Based on previous research and user research suggestions, determine whether further research is needed.
+If further research is needed, list of follow-up SERP queries to research the topic further.
+Make sure each query is unique and not similar to each other.
+If you believe no further research is needed, you can output an empty queries.
 
 ${serpQuerySchemaPrompt}`;
 
-export const finalReportPrompt = `This is the report plan after user confirmation:
-<plan>
-{plan}
-</plan>
+export const finalReportCitationImagePrompt = `Image Rules:
 
-Here are all the learnings from previous research:
-<learnings>
-{learnings}
-</learnings>
+- Images related to the paragraph content at the appropriate location in the article according to the image description.
+- Include images using \`![Image Description](image_url)\` in a separate section.
+- **Do not add any images at the end of the article.**`;
 
-Here are all the sources from previous research:
-<sources>
-{sources}
-</sources>
+export const finalReportReferencesPrompt = `Citation Rules:
 
-Please write according to the user's writing requirements:
-<requirement>
-{requirement}
-</requirement>
-
-Write a final report based on the report plan using the learnings from research. Make it as as detailed as possible, aim for 5 pages or more, the more the better, include ALL the learnings from research.
-**Respond only the final report content, and no additional text before or after.**
-
-Citation Rules:
 - Please cite research references at the end of your paragraphs when appropriate.
 - If the citation is from the reference, please **ignore**. Include only references from sources.
 - Please use the reference format [number], to reference the learnings link in corresponding parts of your answer.
 - If a paragraphs comes from multiple learnings reference link, please list all relevant citation numbers, e.g., [1][2]. Remember not to group citations at the end but list them in the corresponding parts of your answer. Control the number of footnotes.
 - Do not have more than 3 reference link in a paragraph, and keep only the most relevant ones.
-- Do not add references at the end of the report.`;
+- **Do not add references at the end of the report.**`;
 
-export const rewritingPrompt = `You are tasked with re-writing the following content to markdown. Ensure you do not change the meaning or story behind the content.
+export const finalReportPrompt = `This is the report plan after user confirmation:
+<PLAN>
+{plan}
+</PLAN>
 
-**Respond only to updated content, and no additional text before or after.**`;
+Here are all the learnings from previous research:
+<LEARNINGS>
+{learnings}
+</LEARNINGS>
+
+Here are all the sources from previous research:
+<SOURCES>
+{sources}
+</SOURCES>
+
+Here are all the images from previous research:
+<IMAGES>
+{images}
+</IMAGES>
+
+Please write according to the user's writing requirements:
+<REQUIREMENT>
+{requirement}
+</REQUIREMENT>
+
+Write a final report based on the report plan using the learnings from research.
+Make it as as detailed as possible, aim for 5 pages or more, the more the better, include ALL the learnings from research.
+**Including meaningful images from the previous research in the report is very helpful.**
+**Respond only the final report content, and no additional text before or after.**`;
+
+export const rewritingPrompt = `You are tasked with re-writing the following text to markdown. Ensure you do not change the meaning or story behind the text. 
+
+**Respond only the updated markdown text, and no additional text before or after.**`;
+
+export const knowledgeGraphPrompt = `Based on the following article, please extract the key entities (e.g., names of people, places, organizations, concepts, events, etc.) and the main relationships between them, and then generate a Mermaid graph code that visualizes these entities and relationships.
+
+## Output format requirements
+
+1. Use Mermaid's graph TD (Top-Down) or graph LR (Left-Right) type.
+2. Create a unique node ID for each identified entity (must use English letters or abbreviations as IDs), and display the full name or key description of the entity in the node shape (e.g., PersonA[Alice], OrgB[XYZ Company]).
+3. Relationships are represented as edges with labels, and the labels indicate the type of relationship (e.g., A --> |"Relationship Type"| B).
+4. Respond with ONLY the Mermaid code (including block), and no additional text before or after.
+5. Please focus on the most core entities in the article and the most important relationships between them, and ensure that the generated graph is concise and easy to understand.
+6. All text content **MUST** be wrapped in \`"\` syntax. (e.g., "Any Text Content")
+7. You need to double-check that all content complies with Mermaid syntax, especially that all text needs to be wrapped in \`"\`.`;

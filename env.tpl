@@ -33,6 +33,16 @@ XAI_API_KEY=
 # (Optional) Server-side XAI API Proxy URL. Default, `https://api.x.ai`
 XAI_API_BASE_URL=
 
+# (Optional) Server-side Mistral API Key (Required for server API calls)
+MISTRAL_API_KEY=
+# (Optional) Server-side Mistral API Proxy URL. Default, `https://api.mistral.ai`
+MISTRAL_API_BASE_URL=
+
+# (Optional) Server-side Azure API Key (Required for server API calls)
+AZURE_API_KEY=
+# (Optional) Server-side Azure Resource Name. The resource name is used in the assembled URL: `https://{AZURE_RESOURCE_NAME}.openai.azure.com/openai/deployments`
+AZURE_RESOURCE_NAME=
+
 # (Optional) Server-side Compatible with OpenAI API Key (Required for server API calls)
 OPENAI_COMPATIBLE_API_KEY=
 # (Optional) Server-side Compatible with OpenAI API Proxy URL.
@@ -67,9 +77,22 @@ BOCHA_API_BASE_URL=
 # (Optional) Server-side Searxng API Proxy URL. Default, `http://0.0.0.0:8080`
 SEARXNG_API_BASE_URL=
 
+# (Optional) MCP Server AI provider
+# Possible values ​​include: google, openai, anthropic, deepseek, xai, mistral, azure, openrouter, openaicompatible, pollinations, ollama
+MCP_AI_PROVIDER=
+# (Optional) MCP Server search provider. Default, `model`
+# Possible values ​​include: model, tavily, firecrawl, exa, bocha, searxng
+MCP_SEARCH_PROVIDER=
+# (Optional) MCP Server thinking model id, the core model used in deep research.
+MCP_THINKING_MODEL=
+# (Optional) MCP Server task model id, used for secondary tasks, high output models are recommended.
+MCP_TASK_MODEL=
+
 # (Optional) Disable server-side AI provider usage permissions
+# Possible values ​​include: google, openai, anthropic, deepseek, xai, mistral, azure, openrouter, openaicompatible, pollinations, ollama
 NEXT_PUBLIC_DISABLED_AI_PROVIDER=
 # (Optional) Disable server-side search provider usage permissions
+# Possible values ​​include: model, tavily, firecrawl, exa, bocha, searxng
 NEXT_PUBLIC_DISABLED_SEARCH_PROVIDER=
 # (Optional) Customize the model list, add or delete models
 NEXT_PUBLIC_MODEL_LIST=

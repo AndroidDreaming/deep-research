@@ -46,4 +46,24 @@
   a.reference {
     @apply text-xs before:content-["["] after:content-["]"];
   }
+  .animate-fade-in {
+    animation: fadeIn 0.2s ease-in;
+  }
+  .react-transform-wrapper {
+    @apply w-auto h-auto;
+  }
+  &.mermaid-view {
+    .react-transform-wrapper {
+      @apply w-auto h-[50vh];
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

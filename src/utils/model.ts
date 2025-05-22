@@ -113,6 +113,19 @@ export function filterPollinationsModelList(modelList: string[]) {
   return [recommendModelList, normalModelList];
 }
 
+export function filterMistralModelList(modelList: string[]) {
+  const recommendModelList: string[] = [];
+  const normalModelList: string[] = [];
+  modelList.filter((model) => {
+    if (model.includes("large-latest") || model.includes("medium-latest")) {
+      recommendModelList.push(model);
+    } else {
+      normalModelList.push(model);
+    }
+  });
+  return [recommendModelList, normalModelList];
+}
+
 export function getCustomModelList(customModelList: string[]) {
   const availableModelList: string[] = [];
   const disabledModelList: string[] = [];

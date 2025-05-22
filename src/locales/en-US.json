@@ -15,7 +15,7 @@
       "restartResearch": "Restart Research",
       "writeReport": "Write Report",
       "continueResearch": "Continue Research",
-      "indepthResearch": "In-depth Research",
+      "indepthResearch": "Further Research",
       "rewriteReport": "Rewrite Report",
       "sources": "Sources",
       "thinking": "Thinking...",
@@ -49,7 +49,8 @@
       "emptyTip": "Waiting for research task...",
       "suggestionLabel": "Research suggestions (Optional)",
       "suggestionPlaceholder": "Whether to add or adjust research directions...",
-      "references": "References"
+      "references": "References",
+      "relatedImages": "Related Images"
     },
     "finalReport": {
       "title": "4. Final Report",
@@ -138,8 +139,21 @@
     "addEmojis": "Add Emojis",
     "send": "Send"
   },
+  "knowledgeGraph": {
+    "action": "Generate Knowledge Graph",
+    "regenerate": "Regenerate",
+    "edit": "Edit",
+    "view": "View"
+  },
   "editor": {
     "copy": "Copy",
+    "mermaid": {
+      "downloadSvg": "Download as Image",
+      "copyText": "Copy Text",
+      "zoomIn": "Zoom In",
+      "zoomOut": "Zoom Out",
+      "resize": "Resize"
+    },
     "tooltip": {
       "bold": "Bold",
       "italic": "Italic",
@@ -233,7 +247,7 @@
     "title": "Setting",
     "description": "All settings are saved in the user's browser.",
     "model": "Model",
-    "general": "General",
+    "general": "System",
     "provider": "AI Provider",
     "providerTip": "AI service provider. For AI aggregation services such as One Api and New Api, please select `Compatible OpenAI`.",
     "openAICompatible": "OpenAI Compatible",
@@ -243,9 +257,13 @@
     "local": "Local",
     "proxy": "Proxy",
     "apiKeyLabel": "Api Key",
-    "apiKeyPlaceholder": "Please enter the Model Api Key",
+    "apiKeyPlaceholder": "Please enter the model API key",
     "apiUrlLabel": "Api Base Url",
     "apiUrlPlaceholder": "Please enter the API base URL",
+    "resourceNameLabel": "Resource Name",
+    "resourceNamePlaceholder": "Please enter the resource name",
+    "apiVersionLabel": "Api Version",
+    "apiVersionPlaceholder": "Please enter the API version",
     "accessPassword": "Access Password",
     "accessPasswordPlaceholder": "Please enter the server access password",
     "accessPasswordTip": "Server-side API authentication prevents API from being misused by external applications.",
@@ -283,11 +301,19 @@
     "dark": "Dark",
     "debug": "Debug",
     "debugTip": "System debugging can help users capture request exceptions and locate unknown errors. Normally, it does not need to be enabled.",
+    "PWA": "Install PWA",
+    "PWATip": "A Progressive Web App is an application built using web platform technologies that provides a user experience close to that of native applications.",
+    "installlPWA": "Install browser application (PWA)",
     "resetSetting": "Reset Settings",
     "resetAllSettings": "Reset settings and clear the cache",
     "resetSettingWarning": "This operation will clear all data and initialize the project.",
     "version": "Current version",
     "checkForUpdate": "Check for update",
+    "experimental": "Experimental",
+    "references": "References",
+    "referencesTip": "Enabling references will add reference links to search results and final reports via prompt. This may not work well for small models.",
+    "citationImage": "Citation Image",
+    "citationImageTip": "Enabling reference images will attempt to add content-related images to the final report through a prompt.",
     "save": "Save",
     "confirm": "Confirm",
     "cancel": "Cancel"

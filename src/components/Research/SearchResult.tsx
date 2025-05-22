@@ -40,10 +40,18 @@ import { downloadFile } from "@/utils/file";
 
 const MagicDown = dynamic(() => import("@/components/MagicDown"));
 const MagicDownView = dynamic(() => import("@/components/MagicDown/View"));
+const Lightbox = dynamic(() => import("@/components/Internal/Lightbox"));
 
 const formSchema = z.object({
   suggestion: z.string().optional(),
 });
+
+function addQuoteBeforeAllLine(text: string = "") {
+  return text
+    .split("\n")
+    .map((line) => `> ${line}`)
+    .join("\n");
+}
 
 function TaskState({ state }: { state: SearchTask["state"] }) {
   if (state === "completed") {
@@ -83,9 +91,17 @@ function SearchResult() {
   function getSearchResultContent(item: SearchTask) {
     return [
       `## ${item.query}`,
-      `> ${item.researchGoal}`,
+      addQuoteBeforeAllLine(item.researchGoal),
       "---",
       item.learning,
+      item.images?.length > 0
+        ? `#### ${t("research.searchResult.relatedImages")}\n\n${item.images
+            .map(
+              (source) =>
+                `![${source.description || source.url}](${source.url})`
+            )
+            .join("\n")}`
+        : "",
       item.sources?.length > 0
         ? `#### ${t("research.common.sources")}\n\n${item.sources
             .map(
@@ -137,6 +153,7 @@ function SearchResult() {
       researchGoal,
       learning: "",
       sources: [],
+      images: [],
       state: "unprocessed",
     };
     updateTask(query, newTask);
@@ -172,7 +189,9 @@ function SearchResult() {
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="prose prose-slate dark:prose-invert max-w-full min-h-20">
-                    <MagicDownView>{`> ${item.researchGoal}`}</MagicDownView>
+                    <MagicDownView>
+                      {addQuoteBeforeAllLine(item.researchGoal)}
+                    </MagicDownView>
                     <Separator className="mb-4" />
                     <MagicDown
                       value={item.learning}
@@ -246,6 +265,13 @@ function SearchResult() {
                         </>
                       }
                     ></MagicDown>
+                    {item.images?.length > 0 ? (
+                      <>
+                        <hr className="my-6" />
+                        <h4>{t("research.searchResult.relatedImages")}</h4>
+                        <Lightbox data={item.images}></Lightbox>
+                      </>
+                    ) : null}
                     {item.sources?.length > 0 ? (
                       <>
                         <hr className="my-6" />

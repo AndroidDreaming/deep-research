@@ -6,9 +6,12 @@ import {
   reportPlanPrompt,
   serpQueriesPrompt,
   queryResultPrompt,
+  citationRulesPrompt,
   searchResultPrompt,
   searchKnowledgeResultPrompt,
   reviewPrompt,
+  finalReportCitationImagePrompt,
+  finalReportReferencesPrompt,
   finalReportPrompt,
 } from "@/constants/prompts";
 
@@ -61,7 +64,8 @@ export function processResultPrompt(query: string, researchGoal: string) {
 export function processSearchResultPrompt(
   query: string,
   researchGoal: string,
-  results: Source[]
+  results: Source[],
+  enableReferences: boolean
 ) {
   const context = results.map(
     (result, idx) =>
@@ -69,7 +73,9 @@ export function processSearchResultPrompt(
         result.content
       }\n</content>`
   );
-  return searchResultPrompt
+  return (
+    searchResultPrompt + (enableReferences ? `\n\n${citationRulesPrompt}` : "")
+  )
     .replace("{query}", query)
     .replace("{researchGoal}", researchGoal)
     .replace("{context}", context.join("\n"));
@@ -111,7 +117,10 @@ export function writeFinalReportPrompt(
   plan: string,
   learning: string[],
   source: Source[],
-  requirement: string
+  images: ImageSource[],
+  requirement: string,
+  enableCitationImage: boolean,
+  enableReferences: boolean
 ) {
   const learnings = learning.map(
     (detail) => `<learning>\n${detail}\n</learning>`
@@ -120,9 +129,17 @@ export function writeFinalReportPrompt(
     (item, idx) =>
       `<source index="${idx + 1}" url="${item.url}">\n${item.title}\n</source>`
   );
-  return finalReportPrompt
+  const imageList = images.map(
+    (source, idx) => `${idx + 1}. ![${source.description}](${source.url})`
+  );
+  return (
+    finalReportPrompt +
+    (enableCitationImage ? `\n\n${finalReportCitationImagePrompt}` : "") +
+    (enableReferences ? `\n\n${finalReportReferencesPrompt}` : "")
+  )
     .replace("{plan}", plan)
     .replace("{learnings}", learnings.join("\n"))
     .replace("{sources}", sources.join("\n"))
+    .replace("{images}", imageList.join("\n"))
     .replace("{requirement}", requirement);
 }

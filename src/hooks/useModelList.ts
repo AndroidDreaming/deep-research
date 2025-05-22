@@ -7,6 +7,7 @@ import {
   ANTHROPIC_BASE_URL,
   DEEPSEEK_BASE_URL,
   XAI_BASE_URL,
+  MISTRAL_BASE_URL,
   POLLINATIONS_BASE_URL,
   OLLAMA_BASE_URL,
 } from "@/constants/urls";
@@ -69,6 +70,27 @@ interface AnthropicModel {
   display_name: string;
   type: string;
   created_at: string;
+}
+
+interface MistralModel {
+  id: string;
+  object: string;
+  created: number;
+  owned_by: string;
+  capabilities: {
+    completion_chat: boolean;
+    completion_fim: boolean;
+    function_calling: boolean;
+    fine_tuning: boolean;
+    vision: boolean;
+    classification: boolean;
+  };
+  name: string;
+  description: string;
+  max_context_length: number;
+  aliases: string[];
+  default_model_temperature: number;
+  type: string;
 }
 
 interface OllamaModel {
@@ -245,6 +267,29 @@ function useModelList() {
         .filter((id) => !id.includes("image"));
       setModelList(newModelList);
       return newModelList;
+    } else if (provider === "mistral") {
+      const { mistralApiKey = "", mistralApiProxy } =
+        useSettingStore.getState();
+      if (mode === "local" && !mistralApiKey) {
+        return [];
+      }
+      const apiKey = multiApiKeyPolling(mistralApiKey);
+      const response = await fetch(
+        mode === "local"
+          ? completePath(mistralApiProxy || MISTRAL_BASE_URL, "/v1") + "/models"
+          : "/api/ai/mistral/v1/models",
+        {
+          headers: {
+            authorization: `Bearer ${mode === "local" ? apiKey : accessKey}`,
+          },
+        }
+      );
+      const { data = [] } = await response.json();
+      const newModelList = (data as MistralModel[])
+        .filter((item) => item.capabilities.completion_chat)
+        .map((item) => item.id);
+      setModelList(newModelList);
+      return newModelList;
     } else if (provider === "openaicompatible") {
       const { openAICompatibleApiKey = "", openAICompatibleApiProxy } =
         useSettingStore.getState();
@@ -254,8 +299,7 @@ function useModelList() {
       const apiKey = multiApiKeyPolling(openAICompatibleApiKey);
       const response = await fetch(
         mode === "local"
-          ? completePath(openAICompatibleApiProxy || OPENAI_BASE_URL, "/v1") +
-              "/models"
+          ? completePath(openAICompatibleApiProxy, "/v1") + "/models"
           : "/api/ai/openaicompatible/v1/models",
         {
           headers: {

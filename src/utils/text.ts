@@ -68,23 +68,25 @@ export class ThinkTagStreamProcessor {
     const startTag = this.buffer.startsWith("<think>");
     const endTagIndex = this.buffer.indexOf("</think>");
 
-    if (startTag && endTagIndex !== -1) {
-      const contentAfterThink = this.buffer.substring(
-        endTagIndex + "</think>".length
-      );
+    if (startTag) {
+      if (endTagIndex !== -1) {
+        const contentAfterThink = this.buffer.substring(
+          endTagIndex + "</think>".length
+        );
 
-      // Output the content after </think>
-      if (contentAfterThink.length > 0) {
-        contentOutput(contentAfterThink);
+        // Output the content after </think>
+        if (contentAfterThink.length > 0) {
+          contentOutput(contentAfterThink);
+        }
+
+        this.hasSkippedThinkBlock = true;
+        this.buffer = "";
       } else {
         if (thinkingOutput) thinkingOutput(chunk);
       }
-
-      this.hasSkippedThinkBlock = true;
-      this.buffer = "";
     } else {
-      contentOutput(chunk);
       this.hasSkippedThinkBlock = true;
+      contentOutput(chunk);
     }
   }
   end(): void {

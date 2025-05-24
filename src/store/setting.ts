@@ -52,10 +52,12 @@ export interface SettingStore {
   searchProvider: string;
   tavilyApiKey: string;
   tavilyApiProxy: string;
+  tavilyScope: string;
   firecrawlApiKey: string;
   firecrawlApiProxy: string;
   exaApiKey: string;
   exaApiProxy: string;
+  exaScope: string;
   bochaApiKey: string;
   bochaApiProxy: string;
   searxngApiProxy: string;
@@ -126,10 +128,12 @@ export const defaultValues: SettingStore = {
   searchProvider: "model",
   tavilyApiKey: "",
   tavilyApiProxy: "",
+  tavilyScope: "general",
   firecrawlApiKey: "",
   firecrawlApiProxy: "",
   exaApiKey: "",
   exaApiProxy: "",
+  exaScope: "research paper",
   bochaApiKey: "",
   bochaApiProxy: "",
   searxngApiProxy: "",

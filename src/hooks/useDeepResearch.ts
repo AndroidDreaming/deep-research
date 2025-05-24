@@ -30,8 +30,8 @@ import { ThinkTagStreamProcessor, removeJsonMarkdown } from "@/utils/text";
 import { parseError } from "@/utils/error";
 import { pick, flat, unique } from "radash";
 
-function getResponseLanguagePrompt(lang: string) {
-  return `**Respond in ${lang}**`;
+function getResponseLanguagePrompt() {
+  return `**Respond in the same language as the user's language**`;
 }
 
 function handleError(error: unknown) {
@@ -47,7 +47,6 @@ function useDeepResearch() {
   const [status, setStatus] = useState<string>("");
 
   async function askQuestions() {
-    const { language } = useSettingStore.getState();
     const { question } = useTaskStore.getState();
     const { thinkingModel } = getModel();
     setStatus(t("research.common.thinking"));
@@ -57,7 +56,7 @@ function useDeepResearch() {
       system: getSystemPrompt(),
       prompt: [
         generateQuestionsPrompt(question),
-        getResponseLanguagePrompt(language),
+        getResponseLanguagePrompt(),
       ].join("\n\n"),
       onError: handleError,
     });
@@ -84,7 +83,6 @@ function useDeepResearch() {
   }
 
   async function writeReportPlan() {
-    const { language } = useSettingStore.getState();
     const { query } = useTaskStore.getState();
     const { thinkingModel } = getModel();
     setStatus(t("research.common.thinking"));
@@ -92,10 +90,9 @@ function useDeepResearch() {
     const result = streamText({
       model: await createModelProvider(thinkingModel),
       system: getSystemPrompt(),
-      prompt: [
-        writeReportPlanPrompt(query),
-        getResponseLanguagePrompt(language),
-      ].join("\n\n"),
+      prompt: [writeReportPlanPrompt(query), getResponseLanguagePrompt()].join(
+        "\n\n"
+      ),
       onError: handleError,
     });
     let content = "";
@@ -123,7 +120,6 @@ function useDeepResearch() {
   async function searchLocalKnowledges(query: string, researchGoal: string) {
     const { resources } = useTaskStore.getState();
     const knowledgeStore = useKnowledgeStore.getState();
-    const { language } = useSettingStore.getState();
     const knowledges: Knowledge[] = [];
 
     for (const item of resources) {
@@ -142,7 +138,7 @@ function useDeepResearch() {
       system: getSystemPrompt(),
       prompt: [
         processSearchKnowledgeResultPrompt(query, researchGoal, knowledges),
-        getResponseLanguagePrompt(language),
+        getResponseLanguagePrompt(),
       ].join("\n\n"),
       onError: handleError,
     });
@@ -176,7 +172,6 @@ function useDeepResearch() {
       parallelSearch,
       searchMaxResult,
       references,
-      language,
     } = useSettingStore.getState();
     const { resources } = useTaskStore.getState();
     const { networkingModel } = getModel();
@@ -287,7 +282,7 @@ function useDeepResearch() {
                     sources,
                     enableReferences
                   ),
-                  getResponseLanguagePrompt(language),
+                  getResponseLanguagePrompt(),
                 ].join("\n\n"),
                 onError: handleError,
               });
@@ -297,7 +292,7 @@ function useDeepResearch() {
                 system: getSystemPrompt(),
                 prompt: [
                   processResultPrompt(item.query, item.researchGoal),
-                  getResponseLanguagePrompt(language),
+                  getResponseLanguagePrompt(),
                 ].join("\n\n"),
                 tools: getTools(networkingModel),
                 providerOptions: getProviderOptions(),
@@ -310,7 +305,7 @@ function useDeepResearch() {
               system: getSystemPrompt(),
               prompt: [
                 processResultPrompt(item.query, item.researchGoal),
-                getResponseLanguagePrompt(language),
+                getResponseLanguagePrompt(),
               ].join("\n\n"),
               onError: (err) => {
                 taskStore.updateTask(item.query, { state: "failed" });
@@ -387,7 +382,6 @@ function useDeepResearch() {
   }
 
   async function reviewSearchResult() {
-    const { language } = useSettingStore.getState();
     const { reportPlan, tasks, suggestion } = useTaskStore.getState();
     const { thinkingModel } = getModel();
     setStatus(t("research.common.research"));
@@ -398,7 +392,7 @@ function useDeepResearch() {
       system: getSystemPrompt(),
       prompt: [
         reviewSerpQueriesPrompt(reportPlan, learnings, suggestion),
-        getResponseLanguagePrompt(language),
+        getResponseLanguagePrompt(),
       ].join("\n\n"),
       onError: handleError,
     });
@@ -443,7 +437,7 @@ function useDeepResearch() {
   }
 
   async function writeFinalReport() {
-    const { citationImage, references, language } = useSettingStore.getState();
+    const { citationImage, references } = useSettingStore.getState();
     const {
       reportPlan,
       tasks,
@@ -484,7 +478,7 @@ function useDeepResearch() {
           enableCitationImage,
           enableReferences
         ),
-        getResponseLanguagePrompt(language),
+        getResponseLanguagePrompt(),
       ].join("\n\n"),
       onError: handleError,
     });
@@ -533,7 +527,6 @@ function useDeepResearch() {
   }
 
   async function deepResearch() {
-    const { language } = useSettingStore.getState();
     const { reportPlan } = useTaskStore.getState();
     const { thinkingModel } = getModel();
     setStatus(t("research.common.thinking"));
@@ -544,7 +537,7 @@ function useDeepResearch() {
         system: getSystemPrompt(),
         prompt: [
           generateSerpQueriesPrompt(reportPlan),
-          getResponseLanguagePrompt(language),
+          getResponseLanguagePrompt(),
         ].join("\n\n"),
         onError: handleError,
       });

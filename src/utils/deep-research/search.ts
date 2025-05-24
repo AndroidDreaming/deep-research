@@ -122,6 +122,7 @@ export interface SearchProviderOptions {
   apiKey?: string;
   query: string;
   maxResult?: number;
+  scope?: string;
 }
 
 export async function createSearchProvider({
@@ -130,6 +131,7 @@ export async function createSearchProvider({
   apiKey = "",
   query,
   maxResult = 5,
+  scope = "all",
 }: SearchProviderOptions) {
   const headers: HeadersInit = {
     "Content-Type": "application/json",
@@ -146,7 +148,7 @@ export async function createSearchProvider({
         body: JSON.stringify({
           query,
           search_depth: "advanced",
-          topic: "general",
+          topic: scope || "general",
           max_results: Number(maxResult),
           include_images: true,
           include_image_descriptions: true,
@@ -178,6 +180,7 @@ export async function createSearchProvider({
         body: JSON.stringify({
           query,
           limit: maxResult,
+          tbs: "qdr:w",
           origin: "api",
           scrapeOptions: {
             formats: ["markdown"],
@@ -206,7 +209,7 @@ export async function createSearchProvider({
         credentials: "omit",
         body: JSON.stringify({
           query,
-          category: "research paper",
+          category: scope || "general",
           contents: {
             text: true,
             summary: {
@@ -282,16 +285,26 @@ export async function createSearchProvider({
   } else if (provider === "searxng") {
     const params = {
       q: query,
-      categories: ["general", "images"],
-      engines: [
-        "google",
-        "bing",
-        "duckduckgo",
-        "brave",
-        "wikipedia",
-        "bing_images",
-        "google_images",
-      ],
+      categories:
+        scope === "academic" ? ["science", "images"] : ["general", "images"],
+      engines:
+        scope === "academic"
+          ? [
+              "arxiv",
+              "google scholar",
+              "pubmed",
+              "wikispecies",
+              "google_images",
+            ]
+          : [
+              "google",
+              "bing",
+              "duckduckgo",
+              "brave",
+              "wikipedia",
+              "bing_images",
+              "google_images",
+            ],
       lang: "auto",
       format: "json",
       autocomplete: "google",

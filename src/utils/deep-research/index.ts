@@ -106,7 +106,7 @@ class DeepResearch {
   getResponseLanguagePrompt() {
     return this.options.language
       ? `**Respond in ${this.options.language}**`
-      : `**Respond in the same language as the user's query**`;
+      : `**Respond in the same language as the user's language**`;
   }
 
   async writeReportPlan(query: string): Promise<string> {

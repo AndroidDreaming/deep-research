@@ -9,7 +9,11 @@ import { rewritingPrompt } from "@/constants/prompts";
 import { jinaReader, localCrawler } from "@/utils/crawler";
 import { fileParser } from "@/utils/parser";
 import { getTextByteSize } from "@/utils/file";
-import { splitText } from "@/utils/text";
+import {
+  splitText,
+  containsXmlHtmlTags,
+  ThinkTagStreamProcessor,
+} from "@/utils/text";
 import { parseError } from "@/utils/error";
 import { omit } from "radash";
 
@@ -65,6 +69,8 @@ function useKnowledge() {
       const { networkingModel } = getModel();
 
       let content = "";
+      let reasoning = "";
+      const thinkTagStreamProcessor = new ThinkTagStreamProcessor();
       const result = streamText({
         model: await createModelProvider(networkingModel),
         prompt: text,
@@ -86,9 +92,22 @@ function useKnowledge() {
           handleError(err);
         },
       });
-      for await (const textPart of result.textStream) {
-        content += textPart;
+      for await (const part of result.fullStream) {
+        if (part.type === "text-delta") {
+          thinkTagStreamProcessor.processChunk(
+            part.textDelta,
+            (data) => {
+              content += data;
+            },
+            (data) => {
+              reasoning += data;
+            }
+          );
+        } else if (part.type === "reasoning") {
+          reasoning += part.textDelta;
+        }
       }
+      if (reasoning) console.log(reasoning);
       return content;
     }
 
@@ -138,7 +157,12 @@ function useKnowledge() {
               });
             }
 
-            const content = await extractText(rid, filename, chunk);
+            let content = "";
+            if (containsXmlHtmlTags(chunk)) {
+              content = await extractText(rid, filename, chunk);
+            } else {
+              content = chunk;
+            }
             updateResource(rid, {
               name: filename,
               size: getTextByteSize(content),

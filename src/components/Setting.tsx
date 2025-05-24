@@ -145,10 +145,12 @@ const formSchema = z.object({
   searchProvider: z.string().optional(),
   tavilyApiKey: z.string().optional(),
   tavilyApiProxy: z.string().optional(),
+  tavilyScope: z.string().optional(),
   firecrawlApiKey: z.string().optional(),
   firecrawlApiProxy: z.string().optional(),
   exaApiKey: z.string().optional(),
   exaApiProxy: z.string().optional(),
+  exaScope: z.string().optional(),
   bochaApiKey: z.string().optional(),
   bochaApiProxy: z.string().optional(),
   searxngApiProxy: z.string().optional(),
@@ -2898,6 +2900,35 @@ function Setting({ open, onClose }: SettingProps) {
                         </FormItem>
                       )}
                     />
+                    <FormField
+                      control={form.control}
+                      name="tavilyScope"
+                      render={({ field }) => (
+                        <FormItem className="from-item">
+                          <FormLabel className="from-label">
+                            {t("setting.searchScope")}
+                          </FormLabel>
+                          <FormControl className="form-field">
+                            <Select
+                              value={field.value}
+                              onValueChange={field.onChange}
+                            >
+                              <SelectTrigger className="form-field">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="general">
+                                  {t("setting.scopeValue.general")}
+                                </SelectItem>
+                                <SelectItem value="news">
+                                  {t("setting.scopeValue.news")}
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
                   </div>
                   <div
                     className={cn("space-y-4", {
@@ -2990,6 +3021,53 @@ function Setting({ open, onClose }: SettingProps) {
                         </FormItem>
                       )}
                     />
+                    <FormField
+                      control={form.control}
+                      name="exaScope"
+                      render={({ field }) => (
+                        <FormItem className="from-item">
+                          <FormLabel className="from-label">
+                            {t("setting.searchScope")}
+                          </FormLabel>
+                          <FormControl className="form-field">
+                            <Select
+                              value={field.value}
+                              onValueChange={field.onChange}
+                            >
+                              <SelectTrigger className="form-field">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="research paper">
+                                  {t("setting.scopeValue.researchPaper")}
+                                </SelectItem>
+                                <SelectItem value="financial">
+                                  {t("setting.scopeValue.financial")}
+                                </SelectItem>
+                                <SelectItem value="news">
+                                  {t("setting.scopeValue.news")}
+                                </SelectItem>
+                                <SelectItem value="company">
+                                  {t("setting.scopeValue.company")}
+                                </SelectItem>
+                                <SelectItem value="personal site">
+                                  {t("setting.scopeValue.personalSite")}
+                                </SelectItem>
+                                <SelectItem value="github">
+                                  {t("setting.scopeValue.github")}
+                                </SelectItem>
+                                <SelectItem value="linkedin">
+                                  {t("setting.scopeValue.linkedin")}
+                                </SelectItem>
+                                <SelectItem value="pdf">
+                                  {t("setting.scopeValue.pdf")}
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
                   </div>
                   <div
                     className={cn("space-y-4", {
@@ -3078,10 +3156,10 @@ function Setting({ open, onClose }: SettingProps) {
                               </SelectTrigger>
                               <SelectContent>
                                 <SelectItem value="all">
-                                  {t("setting.all")}
+                                  {t("setting.scopeValue.all")}
                                 </SelectItem>
                                 <SelectItem value="academic">
-                                  {t("setting.academic")}
+                                  {t("setting.scopeValue.academic")}
                                 </SelectItem>
                               </SelectContent>
                             </Select>

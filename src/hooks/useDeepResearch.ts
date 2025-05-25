@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { streamText } from "ai";
+import { streamText, type JSONValue, type Tool } from "ai";
 import { parsePartialJson } from "@ai-sdk/ui-utils";
 import { openai } from "@ai-sdk/openai";
 import { type GoogleGenerativeAIProviderMetadata } from "@ai-sdk/google";
@@ -29,6 +29,9 @@ import { isNetworkingModel } from "@/utils/model";
 import { ThinkTagStreamProcessor, removeJsonMarkdown } from "@/utils/text";
 import { parseError } from "@/utils/error";
 import { pick, flat, unique } from "radash";
+
+type ProviderOptions = Record<string, Record<string, JSONValue>>;
+type Tools = Record<string, Tool>;
 
 function getResponseLanguagePrompt() {
   return `**Respond in the same language as the user's language**`;
@@ -193,42 +196,51 @@ function useDeepResearch() {
     };
     const getTools = (model: string) => {
       // Enable OpenAI's built-in search tool
-      if (
-        enableSearch &&
-        searchProvider === "model" &&
-        ["openai", "azure"].includes(provider) &&
-        model.startsWith("gpt-4o")
-      ) {
-        return {
-          web_search_preview: openai.tools.webSearchPreview({
-            // optional configuration:
-            searchContextSize: "medium",
-          }),
-        };
-      } else {
-        return undefined;
+      if (enableSearch && searchProvider === "model") {
+        if (
+          ["openai", "azure"].includes(provider) &&
+          model.startsWith("gpt-4o")
+        ) {
+          return {
+            web_search_preview: openai.tools.webSearchPreview({
+              // optional configuration:
+              searchContextSize: "medium",
+            }),
+          } as Tools;
+        }
       }
+      return undefined;
     };
-    const getProviderOptions = () => {
-      // Enable OpenRouter's built-in search tool
-      if (
-        enableSearch &&
-        searchProvider === "model" &&
-        provider === "openrouter"
-      ) {
-        return {
-          openrouter: {
-            plugins: [
-              {
-                id: "web",
-                max_results: searchMaxResult, // Defaults to 5
+    const getProviderOptions = (model: string) => {
+      if (enableSearch && searchProvider === "model") {
+        // Enable OpenRouter's built-in search tool
+        if (provider === "openrouter") {
+          return {
+            openrouter: {
+              plugins: [
+                {
+                  id: "web",
+                  max_results: searchMaxResult, // Defaults to 5
+                },
+              ],
+            },
+          } as ProviderOptions;
+        } else if (
+          provider === "xai" &&
+          model.startsWith("grok-3") &&
+          !model.includes("mini")
+        ) {
+          return {
+            xai: {
+              search_parameters: {
+                mode: "auto",
+                max_search_results: searchMaxResult,
               },
-            ],
-          },
-        };
-      } else {
-        return undefined;
+            },
+          } as ProviderOptions;
+        }
       }
+      return undefined;
     };
     await Promise.all(
       queries.map((item) => {
@@ -295,7 +307,7 @@ function useDeepResearch() {
                   getResponseLanguagePrompt(),
                 ].join("\n\n"),
                 tools: getTools(networkingModel),
-                providerOptions: getProviderOptions(),
+                providerOptions: getProviderOptions(networkingModel),
                 onError: handleError,
               });
             }

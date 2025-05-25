@@ -450,6 +450,10 @@ For major changes, please open an issue first to discuss your proposed changes.
 
 If you have any questions, suggestions, or feedback, please create a new [issue](https://github.com/u14app/deep-research/issues).
 
+## 🌟 Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=u14app/deep-research&type=Date)](https://www.star-history.com/#u14app/deep-research&Date)
+
 ## 📝 License
 
 Deep Research is released under the [MIT License](LICENSE). This license allows for free use, modification, and distribution for both commercial and non-commercial purposes.

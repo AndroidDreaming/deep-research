@@ -167,7 +167,7 @@ function useModelProvider() {
         break;
     }
 
-    if (mode === "proxy" && !["pollinations", "ollama"].includes(provider)) {
+    if (mode === "proxy") {
       options.apiKey = generateSignature(accessPassword, Date.now());
     }
     return await createAIProvider(options);

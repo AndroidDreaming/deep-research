@@ -170,7 +170,7 @@ export class StreamableHTTPServerTransport implements Transport {
   private sessionIdGenerator: (() => string) | undefined;
   private _started: boolean = false;
   // Map streamId to the ReadableStream controller for SSE streams
-  private _streamMapping: Map<string, ReadableStreamController<string>> =
+  private _streamMapping: Map<string, ReadableStreamController<Uint8Array>> =
     new Map();
   // Maps request ID to stream ID for POST requests resulting in SSE streams
   private _requestToStreamMapping: Map<RequestId, string> = new Map();
@@ -366,10 +366,10 @@ export class StreamableHTTPServerTransport implements Transport {
   private createSSEStream(
     streamId: string,
     options?: { lastEventId?: string }
-  ): ReadableStream<string> {
-    let controller: ReadableStreamController<string>;
+  ): ReadableStream<Uint8Array> {
+    let controller: ReadableStreamController<Uint8Array>;
 
-    const stream = new ReadableStream<string>({
+    const stream = new ReadableStream<Uint8Array>({
       start: async (c) => {
         controller = c;
         // Store the controller keyed by streamId
@@ -478,7 +478,7 @@ export class StreamableHTTPServerTransport implements Transport {
    * Returns false if the enqueue fails (e.g., stream is closed or full).
    */
   private writeSSEEvent(
-    controller: ReadableStreamController<string>,
+    controller: ReadableStreamController<Uint8Array>,
     message: JSONRPCMessage,
     eventId?: string
   ): boolean {
@@ -506,7 +506,8 @@ export class StreamableHTTPServerTransport implements Transport {
 
     // enqueue returns void, success is implied unless it throws or controller is closed asynchronously
     try {
-      controller.enqueue(eventData);
+      const encoder = new TextEncoder();
+      controller.enqueue(encoder.encode(eventData));
       return true; // Indicate success
     } catch (error) {
       // Catch synchronous errors during enqueue (e.g. controller is already errored)

@@ -112,7 +112,7 @@ const nanoid = customAlphabet("1234567890abcdef");
  */
 export class SSEServerTransport implements Transport {
   // Store the ReadableStream controller for the SSE stream
-  private _sseController?: ReadableStreamController<string>;
+  private _sseController?: ReadableStreamController<Uint8Array>;
   private _started: boolean = false;
   private _sessionId: string;
   // Counter for generating SSE event IDs (optional but good practice for SSE)
@@ -169,7 +169,8 @@ export class SSEServerTransport implements Transport {
     };
 
     // Create the ReadableStream for the SSE body
-    const stream = new ReadableStream<string>({
+    const encoder = new TextEncoder();
+    const stream = new ReadableStream<Uint8Array>({
       start: (controller) => {
         this._sseController = controller; // Store the controller to send messages later
         console.log(`[${this._sessionId}] SSE stream started.`);
@@ -189,7 +190,7 @@ export class SSEServerTransport implements Transport {
         // Let's add a simple auto-incrementing ID to all events for consistency.
         const endpointEventData = `event: endpoint\ndata: ${relativeUrlWithSession}\n\n`;
         try {
-          controller.enqueue(endpointEventData);
+          controller.enqueue(encoder.encode(endpointEventData));
           console.log(
             `[${this._sessionId}] Sent 'endpoint' event: ${relativeUrlWithSession}`
           );
@@ -407,6 +408,7 @@ export class SSEServerTransport implements Transport {
       throw error;
     }
 
+    const encoder = new TextEncoder();
     // Format the message as an SSE event
     const eventData = `event: message\nid: ${this
       ._messageIdCounter++}\ndata: ${JSON.stringify(message)}\n\n`;
@@ -425,7 +427,7 @@ export class SSEServerTransport implements Transport {
         this._sseController = undefined;
         throw error;
       }
-      this._sseController.enqueue(eventData);
+      this._sseController.enqueue(encoder.encode(eventData));
       // console.log(`[${this._sessionId}] Sent message (SSE event ID: ${this._messageIdCounter - 1})`); // Debug log
     } catch (error) {
       // Catch synchronous errors during enqueue (e.g. controller already errored)

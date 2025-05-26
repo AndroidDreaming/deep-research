@@ -86,11 +86,12 @@ export async function createAIProvider({
     const { createOpenAI } = await import("@ai-sdk/openai");
     const pollinations = createOpenAI({
       baseURL,
-      apiKey: "",
+      apiKey,
       compatibility: "compatible",
       fetch: async (input, init) => {
         const headers = (init?.headers || {}) as Record<string, string>;
-        delete headers["Authorization"];
+        if (!baseURL?.startsWith("/api/ai/pollinations"))
+          delete headers["Authorization"];
         return await fetch(input, {
           ...init,
           headers,
@@ -105,8 +106,12 @@ export async function createAIProvider({
       baseURL,
       headers,
       fetch: async (input, init) => {
+        const headers = (init?.headers || {}) as Record<string, string>;
+        if (!baseURL?.startsWith("/api/ai/ollama"))
+          delete headers["Authorization"];
         return await fetch(input, {
           ...init,
+          headers,
           credentials: "omit",
         });
       },

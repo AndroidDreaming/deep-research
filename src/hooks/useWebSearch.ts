@@ -18,13 +18,15 @@ function useWebSearch() {
 
     switch (searchProvider) {
       case "tavily":
-        const { tavilyApiKey, tavilyApiProxy } = useSettingStore.getState();
+        const { tavilyApiKey, tavilyApiProxy, tavilyScope } =
+          useSettingStore.getState();
         if (mode === "local") {
           options.baseURL = tavilyApiProxy;
           options.apiKey = multiApiKeyPolling(tavilyApiKey);
         } else {
           options.baseURL = "/api/search/tavily";
         }
+        options.scope = tavilyScope;
         break;
       case "firecrawl":
         const { firecrawlApiKey, firecrawlApiProxy } =
@@ -37,13 +39,14 @@ function useWebSearch() {
         }
         break;
       case "exa":
-        const { exaApiKey, exaApiProxy } = useSettingStore.getState();
+        const { exaApiKey, exaApiProxy, exaScope } = useSettingStore.getState();
         if (mode === "local") {
           options.baseURL = exaApiProxy;
           options.apiKey = multiApiKeyPolling(exaApiKey);
         } else {
           options.baseURL = "/api/search/exa";
         }
+        options.scope = exaScope;
         break;
       case "bocha":
         const { bochaApiKey, bochaApiProxy } = useSettingStore.getState();
@@ -55,12 +58,13 @@ function useWebSearch() {
         }
         break;
       case "searxng":
-        const { searxngApiProxy } = useSettingStore.getState();
+        const { searxngApiProxy, searxngScope } = useSettingStore.getState();
         if (mode === "local") {
           options.baseURL = searxngApiProxy;
         } else {
           options.baseURL = "/api/search/searxng";
         }
+        options.scope = searxngScope;
         break;
       default:
         break;

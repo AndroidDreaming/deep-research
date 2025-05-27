@@ -86,7 +86,7 @@ export async function createAIProvider({
     const { createOpenAI } = await import("@ai-sdk/openai");
     const pollinations = createOpenAI({
       baseURL,
-      apiKey,
+      apiKey: apiKey ?? "",
       compatibility: "compatible",
       fetch: async (input, init) => {
         const headers = (init?.headers || {}) as Record<string, string>;

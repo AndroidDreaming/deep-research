@@ -203,19 +203,21 @@ class DeepResearch {
       let searchResult;
       let sources: Source[] = [];
       let images: ImageSource[] = [];
-      if (this.options.searchProvider.provider === "model") {
+      const { taskModel } = this.options.AIProvider;
+      const { provider = "model", maxResult = 5 } = this.options.searchProvider;
+      if (provider === "model") {
         const getTools = async () => {
           // Enable OpenAI's built-in search tool
           if (
-            this.options.searchProvider.provider === "model" &&
-            ["openai", "azure"].includes(this.options.AIProvider.taskModel) &&
-            this.options.AIProvider.taskModel.startsWith("gpt-4o")
+            provider === "model" &&
+            ["openai", "azure"].includes(taskModel) &&
+            taskModel.startsWith("gpt-4o")
           ) {
             const { openai } = await import("@ai-sdk/openai");
             return {
               web_search_preview: openai.tools.webSearchPreview({
                 // optional configuration:
-                searchContextSize: "medium",
+                searchContextSize: maxResult > 5 ? "high" : "medium",
               }),
             };
           } else {
@@ -224,16 +226,13 @@ class DeepResearch {
         };
         const getProviderOptions = () => {
           // Enable OpenRouter's built-in search tool
-          if (
-            this.options.searchProvider.provider === "model" &&
-            this.options.AIProvider.taskModel === "openrouter"
-          ) {
+          if (provider === "model" && taskModel === "openrouter") {
             return {
               openrouter: {
                 plugins: [
                   {
                     id: "web",
-                    max_results: this.options.searchProvider.maxResult ?? 5,
+                    max_results: maxResult ?? 5,
                   },
                 ],
               },
@@ -263,7 +262,7 @@ class DeepResearch {
           sources = result.sources;
           images = result.images;
         } catch (err) {
-          const errorMessage = `[${this.options.searchProvider.provider}]: ${
+          const errorMessage = `[${provider}]: ${
             err instanceof Error ? err.message : "Search Failed"
           }`;
           throw new Error(errorMessage);
@@ -276,7 +275,7 @@ class DeepResearch {
               item.query,
               item.researchGoal,
               sources,
-              enableReferences
+              sources.length > 0 && enableReferences
             ),
             this.getResponseLanguagePrompt(),
           ].join("\n\n"),
@@ -409,8 +408,8 @@ class DeepResearch {
           sources.map((item) => pick(item, ["title", "url"])),
           images,
           "",
-          enableCitationImage,
-          enableReferences
+          images.length > 0 && enableCitationImage,
+          sources.length > 0 && enableReferences
         ),
         this.getResponseLanguagePrompt(),
       ].join("\n\n"),

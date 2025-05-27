@@ -283,7 +283,8 @@ function useDeepResearch() {
                 );
                 return plimit.clearQueue();
               }
-              const enableReferences = references === "enable";
+              const enableReferences =
+                sources.length > 0 && references === "enable";
               searchResult = streamText({
                 model: await createModel(networkingModel),
                 system: getSystemPrompt(),
@@ -474,8 +475,8 @@ function useDeepResearch() {
       flat(tasks.map((item) => item.images || [])),
       (item) => item.url
     );
-    const enableCitationImage = citationImage === "enable";
-    const enableReferences = references === "enable";
+    const enableCitationImage = images.length > 0 && citationImage === "enable";
+    const enableReferences = sources.length > 0 && references === "enable";
     const thinkTagStreamProcessor = new ThinkTagStreamProcessor();
     const result = streamText({
       model: await createModelProvider(thinkingModel),

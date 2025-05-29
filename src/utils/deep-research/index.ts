@@ -428,8 +428,6 @@ class DeepResearch {
             this.onMessage("reasoning", { type: "text", text: data });
           }
         );
-        content += part.textDelta;
-        this.onMessage("message", { type: "text", text: part.textDelta });
       } else if (part.type === "reasoning") {
         this.onMessage("reasoning", { type: "text", text: part.textDelta });
       } else if (part.type === "source") {

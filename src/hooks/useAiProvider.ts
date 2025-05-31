@@ -37,7 +37,7 @@ function useModelProvider() {
           );
           options.apiKey = multiApiKeyPolling(apiKey);
         } else {
-          options.baseURL = "/api/ai/google/v1beta";
+          options.baseURL = location.origin + "/api/ai/google/v1beta";
         }
         break;
       case "openai":
@@ -50,7 +50,7 @@ function useModelProvider() {
           );
           options.apiKey = multiApiKeyPolling(openAIApiKey);
         } else {
-          options.baseURL = "/api/ai/openai/v1";
+          options.baseURL = location.origin + "/api/ai/openai/v1";
         }
         break;
       case "anthropic":
@@ -67,7 +67,7 @@ function useModelProvider() {
           };
           options.apiKey = multiApiKeyPolling(anthropicApiKey);
         } else {
-          options.baseURL = "/api/ai/anthropic/v1";
+          options.baseURL = location.origin + "/api/ai/anthropic/v1";
         }
         break;
       case "deepseek":
@@ -80,7 +80,7 @@ function useModelProvider() {
           );
           options.apiKey = multiApiKeyPolling(deepseekApiKey);
         } else {
-          options.baseURL = "/api/ai/deepseek/v1";
+          options.baseURL = location.origin + "/api/ai/deepseek/v1";
         }
         break;
       case "xai":
@@ -89,7 +89,7 @@ function useModelProvider() {
           options.baseURL = completePath(xAIApiProxy || XAI_BASE_URL, "/v1");
           options.apiKey = multiApiKeyPolling(xAIApiKey);
         } else {
-          options.baseURL = "/api/ai/xai/v1";
+          options.baseURL = location.origin + "/api/ai/xai/v1";
         }
         break;
       case "mistral":
@@ -102,7 +102,7 @@ function useModelProvider() {
           );
           options.apiKey = multiApiKeyPolling(mistralApiKey);
         } else {
-          options.baseURL = "/api/ai/mistral/v1";
+          options.baseURL = location.origin + "/api/ai/mistral/v1";
         }
         break;
       case "azure":
@@ -112,7 +112,7 @@ function useModelProvider() {
           options.baseURL = `https://${azureResourceName}.openai.azure.com/openai/deployments`;
           options.apiKey = multiApiKeyPolling(azureApiKey);
         } else {
-          options.baseURL = "/api/ai/azure";
+          options.baseURL = location.origin + "/api/ai/azure";
         }
         break;
       case "openrouter":
@@ -125,7 +125,7 @@ function useModelProvider() {
           );
           options.apiKey = multiApiKeyPolling(openRouterApiKey);
         } else {
-          options.baseURL = "/api/ai/openrouter/api/v1";
+          options.baseURL = location.origin + "/api/ai/openrouter/api/v1";
         }
         break;
       case "openaicompatible":
@@ -135,7 +135,7 @@ function useModelProvider() {
           options.baseURL = completePath(openAICompatibleApiProxy, "/v1");
           options.apiKey = multiApiKeyPolling(openAICompatibleApiKey);
         } else {
-          options.baseURL = "/api/ai/openaicompatible/v1";
+          options.baseURL = location.origin + "/api/ai/openaicompatible/v1";
         }
         break;
       case "pollinations":
@@ -146,7 +146,7 @@ function useModelProvider() {
             "/v1"
           );
         } else {
-          options.baseURL = "/api/ai/pollinations/v1";
+          options.baseURL = location.origin + "/api/ai/pollinations/v1";
         }
         break;
       case "ollama":
@@ -157,7 +157,7 @@ function useModelProvider() {
             "/api"
           );
         } else {
-          options.baseURL = "/api/ai/ollama/api";
+          options.baseURL = location.origin + "/api/ai/ollama/api";
           options.headers = {
             Authorization: generateSignature(accessPassword, Date.now()),
           };

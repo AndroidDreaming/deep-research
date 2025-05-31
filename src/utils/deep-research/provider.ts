@@ -90,7 +90,7 @@ export async function createAIProvider({
       compatibility: "compatible",
       fetch: async (input, init) => {
         const headers = (init?.headers || {}) as Record<string, string>;
-        if (!baseURL?.startsWith("/api/ai/pollinations"))
+        if (!baseURL?.startsWith(location.origin))
           delete headers["Authorization"];
         return await fetch(input, {
           ...init,
@@ -107,7 +107,7 @@ export async function createAIProvider({
       headers,
       fetch: async (input, init) => {
         const headers = (init?.headers || {}) as Record<string, string>;
-        if (!baseURL?.startsWith("/api/ai/ollama"))
+        if (!baseURL?.startsWith(location.origin))
           delete headers["Authorization"];
         return await fetch(input, {
           ...init,

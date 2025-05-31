@@ -318,7 +318,7 @@ export async function createSearchProvider({
       `${completePath(
         baseURL || SEARXNG_BASE_URL
       )}/search?${searchQuery.toString()}`,
-      baseURL?.startsWith("/api/search/searxng")
+      baseURL?.startsWith(location.origin)
         ? { method: "POST", credentials: "omit", headers }
         : { method: "GET", credentials: "omit" }
     );
@@ -330,13 +330,7 @@ export async function createSearchProvider({
     );
     return {
       sources: rearrangedResults
-        .filter(
-          (item) =>
-            item.category === "general" &&
-            item.content &&
-            item.url &&
-            item.score >= 0.5
-        )
+        .filter((item) => item.content && item.url && item.score >= 0.5)
         .slice(0, maxResult * 5)
         .map((result) => pick(result, ["title", "content", "url"])) as Source[],
       images: rearrangedResults

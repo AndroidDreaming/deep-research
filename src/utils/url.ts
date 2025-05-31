@@ -1,9 +1,7 @@
 export function completePath(url: string, newPath?: string) {
   try {
     // Use dummy base URL to avoid parameter errors
-    const dummyBaseURL = "http://localhost:3000";
-    const urlReg = new RegExp("http(s)?://");
-    const urlObj = new URL(url, urlReg.test(url) ? url : dummyBaseURL);
+    const urlObj = new URL(url);
     let pathname = urlObj.pathname;
 
     // Remove the trailing slash if present

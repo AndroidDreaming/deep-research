@@ -34,7 +34,7 @@ type ProviderOptions = Record<string, Record<string, JSONValue>>;
 type Tools = Record<string, Tool>;
 
 function getResponseLanguagePrompt() {
-  return `**Respond in the same language as the user's language**`;
+  return `\n\n**Respond in the same language as the user's language**`;
 }
 
 function handleError(error: unknown) {

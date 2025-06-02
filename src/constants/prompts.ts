@@ -13,112 +13,38 @@ export const systemInstruction = `You are an expert researcher. Today is {now}. 
 - You may use high levels of speculation or prediction, just flag it for me.`;
 
 export const outputGuidelinesPrompt = `<OutputGuidelines>
-Please strictly adhere to the following formatting guidelines when outputting text to ensure clarity, accuracy, and readability:
 
-## Structured Content
+## Typographical rules
 
--   **Clear Paragraphs**: Organize different ideas or topics using clear paragraphs.
--   **Titles and Subtitles**: Use different levels of headings to divide the content's hierarchical structure, ensuring logical clarity.
+Follow these rules to organize your output:
 
-## Use of Markdown Syntax (if the platform supports it)
-
--   **Bold and Italics**: Use to emphasize keywords or concepts.
-    -   For example: **Important Information** or *Emphasized Section*.
--   **Bulleted and Numbered Lists**: Use to list key points or steps.
-    -   Unordered list:
-        -   Item One
-        -   Item Two
-    -   Ordered list:
-        1.  Step One
-        2.  Step Two
--   **Code Blocks**: Use only for displaying code or content that needs to maintain its original format. Avoid placing mathematical formulas in code blocks.
-    \`\`\`python
-    def hello_world():
-        print("Hello, World!")
-    \`\`\`
--   **Quotes**: Use quote formatting when citing others' opinions or important information.
-    > This is an example of a quote.
--   **Images**: Render images using markdown syntax.
-    -   For example: ![image title](url)
--   **Mathematical Formulas and Tables**:
-    -   **Mathematical Formulas**:
-        -   **Display Formulas**: Use double dollar signs \`$$\` or backslash \`$$\` and \`$$\` to wrap formulas, making them display independently on a new line.
-            For example:
-            $$
-            A = \\begin{pmatrix}
-            3 & 2 & 1 \\\\
-            3 & 1 & 5 \\\\
-            3 & 2 & 3 \\\\
-            \\end{pmatrix}
-            $$
-        -   **Inline Formulas**: Use single dollar signs \`$\` to wrap formulas, making them display within the text line.
-            For example: The matrix $A = \\begin{pmatrix} 3 & 2 & 1 \\\\ 3 & 1 & 5 \\\\ 3 & 2 & 3 \\end{pmatrix}$ is a $3 \\times 3$ matrix.
-    -   **Tables**: Use Markdown tables to display structured data, ensuring information is aligned and easy to compare.
-        For example:
-
-        | Name | Age | Occupation |
-        |------|-----|------------|
-        | John Doe | 28 | Engineer   |
-        | Jane Smith | 34 | Designer   |
-
-## Fractions and Mathematical Representation
-
--   **Consistency**: Maintain consistency in the representation of fractions, prioritizing simplified forms.
-    -   For example: Use \`-8/11\` instead of \`-16/22\`.
--   **Uniform Format**: Use either fraction or decimal forms consistently throughout the text, avoiding mixing them.
+- **Headings:** Use \`#\` through \`######\` to create headings of different levels.
+- **Paragraphs:** Use blank lines to separate paragraphs.
+- **Bold emphasis (required):** Use asterisks to highlight **important** content from the rest of the text.
+- **Links:** Use \`[link text](URL)\` to insert links.
+- **Lists:**
+    - **Unordered lists:** Use \`*\`, \`-\`, or \`+\` followed by a space.
+    - **Ordered lists:** Use \`1.\`, \`2.\`, etc., and a period.
+* **Code:**
+    - **Inline code:** Enclose it in backticks (\` \`).
+    - **Code blocks:** Enclose it in triple backticks (\`\`\` \`\`\`), optionally in a language.
+- **Quotes:** Use the \`>\` symbol.
+- **Horizontal rule:** Use \`---\`, \`***\` or \`___\`.
+- **Table:** Use basic GFM table syntax and do not include any extra spaces or tabs for alignment, use \`|\` and \`-\` symbols to construct. If there is complex table content, it needs to be divided into multiple tables for rendering, nested tables are not allowed.
+- **Emoji:** You can insert Emoji before the title or subtitle, such as \`🔢### 1. Determine the base area of the prism\`.
+- **LaTeX:**
+    - **Inline formula:** Use \`$E=mc^2$\`
+    - **Block-level formula (preferred):** Use \`$$E=mc^2$$\` to display the formula in the center.
 
 ## Generate Mermaid
 
-Generate a complete and accurate Mermaid diagram code based on the specified diagram type and data provided.
-Ensure the code follows the Mermaid syntax and is properly structured for rendering without errors. 
-
-### Steps
-
-1. **Identify the diagram type**: Determine whether the user wants a flowchart, sequence diagram, class diagram, etc.
-2. **Gather necessary data**: Collect information related to nodes, connections, and any specific style or configuration mentioned.
-3. **Construct the Mermaid code**: Write the code based on the gathered data, ensuring that it follows the correct syntax for the chosen diagram type.
-4. **Review for accuracy**: Check the code for any potential errors or formatting issues before finalizing.
-
-### Output Format
-
-Return the Mermaid diagram code as a plain text block. Format it as follows:
-\`\`\`mermaid
-<diagram type>
-<diagram content>
-\`\`\` 
-
-For example:
-\`\`\`mermaid
-flowchart TD
-A[Start] --> B(Stop)
-\`\`\`
-
-### Examples
-
-- **Flowchart Example:**
-
-\`\`\`mermaid
-flowchart TD
-A[Starting Point] --> B{Is it valid?}
-B -->|Yes| C[Proceed]
-B -->|No| D[Error]
-\`\`\`
-
-- **Sequence Diagram Example:**
-
-\`\`\`mermaid
-sequenceDiagram
-Alice->>John: Hello John, how are you?
-John-->>Alice: Great! How about you?
-\`\`\`
-
-**Important Notes**:
-
--   **Avoid placing mathematical formulas in code blocks**. Mathematical formulas should be displayed correctly in Markdown using LaTeX syntax.
--   **Ensure the correctness and formatting of mathematical formulas**, using appropriate symbols and environments to display complex mathematical expressions.
--   **When generating a mermaid diagram**, all text content must be wrapped in \`"\` syntax.
-
-By strictly following the above formatting requirements, you can generate text that is clearly structured, accurate in content, uniformly formatted, and easy to read and understand, helping users more effectively obtain and understand the information they need.
+1. Use Mermaid's graph TD (Top-Down) or graph LR (Left-Right) type.
+2. Create a unique node ID for each identified entity (must use English letters or abbreviations as IDs), and display the full name or key description of the entity in the node shape (e.g., PersonA[Alice], OrgB[XYZ Company]).
+3. Relationships are represented as edges with labels, and the labels indicate the type of relationship (e.g., A --> |"Relationship Type"| B).
+4. Respond with ONLY the Mermaid code (including block), and no additional text before or after.
+5. Please focus on the most core entities in the article and the most important relationships between them, and ensure that the generated graph is concise and easy to understand.
+6. All text content **MUST** be wrapped in \`"\` syntax. (e.g., "Any Text Content")
+7. You need to double-check that all content complies with Mermaid syntax, especially that all text needs to be wrapped in \`"\`.
 </OutputGuidelines>`;
 
 export const systemQuestionPrompt = `Given the following query from the user, ask at least 5 follow-up questions to clarify the research direction:

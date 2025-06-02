@@ -45,7 +45,9 @@ function KnowledgeGraph({ open, onClose }: Props) {
     setLoading(true);
     const result = streamText({
       model: await createModelProvider(thinkingModel),
-      system: knowledgeGraphPrompt,
+      system:
+        knowledgeGraphPrompt +
+        `\n\n**The node text uses the same language as the article**`,
       prompt: finalReport,
       onError: handleError,
     });

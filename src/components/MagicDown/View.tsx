@@ -1,15 +1,12 @@
 import dynamic from "next/dynamic";
-import { useMemo, useId, memo } from "react";
-import { marked } from "marked";
+import { useMemo, memo } from "react";
 import ReactMarkdown, { type Options, type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import remarkBreaks from "remark-breaks";
 import rehypeHighlight from "rehype-highlight";
 import rehypeKatex from "rehype-katex";
-// import { useSettingStore } from "@/store/setting";
 import { clsx } from "clsx";
-// import { animateText } from "@/utils/animate-text";
 import { omit } from "radash";
 
 import "katex/dist/katex.min.css";
@@ -25,14 +22,7 @@ export type MarkdownProps = {
   components?: Partial<Components>;
 };
 
-function parseMarkdownIntoBlocks(markdown: string): string[] {
-  const tokens = marked.lexer(markdown);
-  return tokens.map((token) => token.raw);
-}
-
 function MarkdownBlock({ children: content, ...rest }: Options) {
-  // const { language } = useSettingStore();
-
   const remarkPlugins = useMemo(
     () => rest.remarkPlugins ?? [],
     [rest.remarkPlugins]
@@ -50,7 +40,6 @@ function MarkdownBlock({ children: content, ...rest }: Options) {
       rehypePlugins={[
         [rehypeHighlight, { detect: true, ignoreMissing: true }],
         rehypeKatex,
-        // animateText(language),
         ...rehypePlugins,
       ]}
       components={{
@@ -171,37 +160,4 @@ function MarkdownBlock({ children: content, ...rest }: Options) {
   );
 }
 
-const MemoizedMarkdownBlock = memo(
-  ({ children }: MarkdownProps) => {
-    return <MarkdownBlock>{children}</MarkdownBlock>;
-  },
-  (prevProps, nextProps) => {
-    if (prevProps.children !== nextProps.children) return false;
-    return true;
-  }
-);
-
-MemoizedMarkdownBlock.displayName = "MemoizedMarkdownBlock";
-
-function MarkdownView({ children, id, className, components }: MarkdownProps) {
-  const generatedId = useId();
-  const blockId = id ?? generatedId;
-  const blocks = useMemo(() => parseMarkdownIntoBlocks(children), [children]);
-
-  return (
-    <div className={className}>
-      {blocks.map((block, index) => (
-        <MemoizedMarkdownBlock
-          key={`${blockId}-block-${index}`}
-          components={components}
-        >
-          {block}
-        </MemoizedMarkdownBlock>
-      ))}
-    </div>
-  );
-}
-
-MarkdownView.displayName = "MarkdownView";
-
-export default memo(MarkdownView);
+export default memo(MarkdownBlock);

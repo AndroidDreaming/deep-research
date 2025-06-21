@@ -1,4 +1,4 @@
-import { streamText } from "ai";
+import { streamText, smoothStream } from "ai";
 import { Md5 } from "ts-md5";
 import { toast } from "sonner";
 import useModelProvider from "@/hooks/useAiProvider";
@@ -18,6 +18,10 @@ import { parseError } from "@/utils/error";
 import { omit } from "radash";
 
 const MAX_CHUNK_LENGTH = 10000;
+
+function smoothTextStream() {
+  return smoothStream({ chunking: /./, delayInMs: 0 });
+}
 
 function handleError(error: unknown) {
   const errorMessage = parseError(error);
@@ -87,6 +91,7 @@ function useKnowledge() {
             updatedAt: currentTime,
           });
         },
+        experimental_transform: smoothTextStream(),
         onError: (err) => {
           updateResource(id, { status: "failed" });
           handleError(err);
@@ -261,6 +266,7 @@ function useKnowledge() {
                 updatedAt: currentTime,
               });
             },
+            experimental_transform: smoothTextStream(),
             onError: (err) => {
               updateResource(id, { status: "failed" });
               handleError(err);

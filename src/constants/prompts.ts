@@ -18,7 +18,8 @@ export const outputGuidelinesPrompt = `<OutputGuidelines>
 
 Follow these rules to organize your output:
 
-- **Headings:** Use \`#\` through \`######\` to create headings of different levels.
+- **Title:** Use \`#\` to create article title.
+- **Headings:** Use \`##\` through \`######\` to create headings of different levels.
 - **Paragraphs:** Use blank lines to separate paragraphs.
 - **Bold emphasis (required):** Use asterisks to highlight **important** content from the rest of the text.
 - **Links:** Use \`[link text](URL)\` to insert links.

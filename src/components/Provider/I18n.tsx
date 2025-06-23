@@ -9,7 +9,7 @@ function I18Provider({ children }: { children: React.ReactNode }) {
 
   useLayoutEffect(() => {
     const settingStore = useSettingStore.getState();
-    if (language === "") {
+    if (settingStore.language === "") {
       const browserLang = detectLanguage();
       settingStore.update({ language: browserLang });
       i18n.changeLanguage(browserLang);

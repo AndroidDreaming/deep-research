@@ -31,7 +31,7 @@ Follow these rules to organize your output:
     - **Code blocks:** Enclose it in triple backticks (\`\`\` \`\`\`), optionally in a language.
 - **Quotes:** Use the \`>\` symbol.
 - **Horizontal rule:** Use \`---\`, \`***\` or \`___\`.
-- **Table:** Use basic GFM table syntax and do not include any extra spaces or tabs for alignment, use \`|\` and \`-\` symbols to construct. If there is complex table content, it needs to be divided into multiple tables for rendering, nested tables are not allowed.
+- **Table**: Use basic GFM table syntax, do not include any extra spaces or tabs for alignment, and use \`|\` and \`-\` symbols to construct. **For complex tables, GFM table syntax is not suitable. You must use HTML syntax to output complex tables.**
 - **Emoji:** You can insert Emoji before the title or subtitle, such as \`🔢### 1. Determine the base area of the prism\`.
 - **LaTeX:**
     - **Inline formula:** Use \`$E=mc^2$\`

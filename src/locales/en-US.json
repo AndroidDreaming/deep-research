@@ -325,6 +325,11 @@
     "referencesTip": "Enabling references will add reference links to search results and final reports via prompt. This may not work well for small models.",
     "citationImage": "Citation Image",
     "citationImageTip": "Enabling reference images will attempt to add content-related images to the final report through a prompt.",
+    "textOutputMode": "Text Output Mode",
+    "textOutputModeTip": "Text output effect of AI. Characters, output text like a typewriter. Words, output by word, the output is most efficient. Lines, the output effect is most stable.",
+    "character": "Character",
+    "word": "Word",
+    "line": "Line",
     "save": "Save",
     "confirm": "Confirm",
     "cancel": "Cancel"

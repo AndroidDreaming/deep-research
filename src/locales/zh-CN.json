@@ -325,6 +325,11 @@
     "referencesTip": "启用参考文献，将通过 prompt 给搜索结果和最终报告中加入引用链接。对于一些小模型，效果可能不佳。",
     "citationImage": "引用图片",
     "citationImageTip": "启用引用图片，会通过 prompt 尝试在最终报告中添加与内容相关的图片。",
+    "textOutputMode": "文本输出模式",
+    "textOutputModeTip": "AI 的文本输出效果。字符，像打字机那样输出文本。单词，按单词输出，输出效率最高。行，输出效果最平稳。",
+    "character": "字符",
+    "word": "单词",
+    "line": "行",
     "save": "保存",
     "confirm": "确认",
     "cancel": "取消"

@@ -162,6 +162,7 @@ const formSchema = z.object({
   debug: z.string().optional(),
   references: z.string().optional(),
   citationImage: z.string().optional(),
+  smoothTextStreamType: z.enum(["character", "word", "line"]).optional(),
 });
 
 function convertModelName(name: string) {
@@ -3425,6 +3426,37 @@ function Setting({ open, onClose }: SettingProps) {
                             </SelectItem>
                             <SelectItem value="disable">
                               {t("setting.disable")}
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="smoothTextStreamType"
+                  render={({ field }) => (
+                    <FormItem className="from-item">
+                      <FormLabel className="from-label">
+                        <HelpTip tip={t("setting.textOutputModeTip")}>
+                          {t("setting.textOutputMode")}
+                        </HelpTip>
+                      </FormLabel>
+                      <FormControl>
+                        <Select {...field} onValueChange={field.onChange}>
+                          <SelectTrigger className="form-field">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="character">
+                              {t("setting.character")}
+                            </SelectItem>
+                            <SelectItem value="word">
+                              {t("setting.word")}
+                            </SelectItem>
+                            <SelectItem value="line">
+                              {t("setting.line")}
                             </SelectItem>
                           </SelectContent>
                         </Select>

@@ -19,8 +19,11 @@ import { omit } from "radash";
 
 const MAX_CHUNK_LENGTH = 10000;
 
-function smoothTextStream() {
-  return smoothStream({ chunking: /./, delayInMs: 0 });
+function smoothTextStream(type: "character" | "word" | "line") {
+  return smoothStream({
+    chunking: type === "character" ? /./ : type,
+    delayInMs: 0,
+  });
 }
 
 function handleError(error: unknown) {
@@ -29,6 +32,7 @@ function handleError(error: unknown) {
 }
 
 function useKnowledge() {
+  const { smoothTextStreamType } = useSettingStore();
   const { createModelProvider, getModel } = useModelProvider();
   const knowledgeStore = useKnowledgeStore();
 
@@ -91,7 +95,7 @@ function useKnowledge() {
             updatedAt: currentTime,
           });
         },
-        experimental_transform: smoothTextStream(),
+        experimental_transform: smoothTextStream(smoothTextStreamType),
         onError: (err) => {
           updateResource(id, { status: "failed" });
           handleError(err);
@@ -266,7 +270,7 @@ function useKnowledge() {
                 updatedAt: currentTime,
               });
             },
-            experimental_transform: smoothTextStream(),
+            experimental_transform: smoothTextStream(smoothTextStreamType),
             onError: (err) => {
               updateResource(id, { status: "failed" });
               handleError(err);

@@ -1,7 +1,7 @@
 {
   "name": "deep-research",
   "description": "Use any LLMs (Large Language Models) for Deep Research. Support SSE API and MCP server.",
-  "version": "0.9.15",
+  "version": "0.9.16",
   "license": "MIT",
   "repository": {
     "url": "https://github.com/u14app/deep-research"
@@ -75,6 +75,7 @@
     "react-zoom-pan-pinch": "^3.7.0",
     "rehype-highlight": "^7.0.2",
     "rehype-katex": "^7.0.1",
+    "rehype-raw": "^7.0.0",
     "remark-breaks": "^4.0.0",
     "remark-gfm": "^4.0.1",
     "remark-math": "^6.0.0",

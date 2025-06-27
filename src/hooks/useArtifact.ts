@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { streamText, smoothStream } from "ai";
 import { toast } from "sonner";
+import { useSettingStore } from "@/store/setting";
 import useModelProvider from "@/hooks/useAiProvider";
 import {
   AIWritePrompt,
@@ -17,8 +18,11 @@ type ArtifactProps = {
   onChange: (value: string) => void;
 };
 
-function smoothTextStream() {
-  return smoothStream({ chunking: /./, delayInMs: 0 });
+function smoothTextStream(type: "character" | "word" | "line") {
+  return smoothStream({
+    chunking: type === "character" ? /./ : type,
+    delayInMs: 0,
+  });
 }
 
 function handleError(error: unknown) {
@@ -27,6 +31,7 @@ function handleError(error: unknown) {
 }
 
 function useArtifact({ value, onChange }: ArtifactProps) {
+  const { smoothTextStreamType } = useSettingStore();
   const { createModelProvider, getModel } = useModelProvider();
   const [loadingAction, setLoadingAction] = useState<string>("");
 
@@ -36,7 +41,7 @@ function useArtifact({ value, onChange }: ArtifactProps) {
     const result = streamText({
       model: await createModelProvider(thinkingModel),
       prompt: AIWritePrompt(value, prompt, systemInstruction),
-      experimental_transform: smoothTextStream(),
+      experimental_transform: smoothTextStream(smoothTextStreamType),
       onError: handleError,
     });
     let text = "";
@@ -54,7 +59,7 @@ function useArtifact({ value, onChange }: ArtifactProps) {
     const result = streamText({
       model: await createModelProvider(thinkingModel),
       prompt: changeLanguagePrompt(value, lang, systemInstruction),
-      experimental_transform: smoothTextStream(),
+      experimental_transform: smoothTextStream(smoothTextStreamType),
       onError: handleError,
     });
     let text = "";
@@ -72,7 +77,7 @@ function useArtifact({ value, onChange }: ArtifactProps) {
     const result = streamText({
       model: await createModelProvider(thinkingModel),
       prompt: changeReadingLevelPrompt(value, level, systemInstruction),
-      experimental_transform: smoothTextStream(),
+      experimental_transform: smoothTextStream(smoothTextStreamType),
       onError: handleError,
     });
     let text = "";
@@ -90,7 +95,7 @@ function useArtifact({ value, onChange }: ArtifactProps) {
     const result = streamText({
       model: await createModelProvider(thinkingModel),
       prompt: adjustLengthPrompt(value, length, systemInstruction),
-      experimental_transform: smoothTextStream(),
+      experimental_transform: smoothTextStream(smoothTextStreamType),
       onError: handleError,
     });
     let text = "";
@@ -108,7 +113,7 @@ function useArtifact({ value, onChange }: ArtifactProps) {
     const result = streamText({
       model: await createModelProvider(thinkingModel),
       prompt: continuationPrompt(value, systemInstruction),
-      experimental_transform: smoothTextStream(),
+      experimental_transform: smoothTextStream(smoothTextStreamType),
       onError: handleError,
     });
     let text = value + "\n";
@@ -126,7 +131,7 @@ function useArtifact({ value, onChange }: ArtifactProps) {
     const result = streamText({
       model: await createModelProvider(thinkingModel),
       prompt: addEmojisPrompt(value, systemInstruction),
-      experimental_transform: smoothTextStream(),
+      experimental_transform: smoothTextStream(smoothTextStreamType),
       onError: handleError,
     });
     let text = "";

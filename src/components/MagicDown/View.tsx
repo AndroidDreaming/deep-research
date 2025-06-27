@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import { useMemo, memo } from "react";
 import ReactMarkdown, { type Options, type Components } from "react-markdown";
+import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import remarkBreaks from "remark-breaks";
@@ -38,10 +39,12 @@ function MarkdownBlock({ children: content, ...rest }: Options) {
       {...rest}
       remarkPlugins={[remarkGfm, remarkMath, remarkBreaks, ...remarkPlugins]}
       rehypePlugins={[
+        rehypeRaw,
         [rehypeHighlight, { detect: true, ignoreMissing: true }],
         rehypeKatex,
         ...rehypePlugins,
       ]}
+      disallowedElements={["script", "form"]}
       components={{
         pre: (props) => {
           const { children, className, ...rest } = props;

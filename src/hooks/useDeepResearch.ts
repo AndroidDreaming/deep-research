@@ -186,6 +186,7 @@ function useDeepResearch() {
       parallelSearch,
       searchMaxResult,
       references,
+      onlyUseLocalResource,
     } = useSettingStore.getState();
     const { resources } = useTaskStore.getState();
     const { networkingModel } = getModel();
@@ -262,6 +263,7 @@ function useDeepResearch() {
           let sources: Source[] = [];
           let images: ImageSource[] = [];
           taskStore.updateTask(item.query, { state: "processing" });
+
           if (resources.length > 0) {
             const knowledges = await searchLocalKnowledges(
               item.query,
@@ -271,10 +273,21 @@ function useDeepResearch() {
               knowledges,
               `### ${t("research.searchResult.references")}`,
               resources.map((item) => `- ${item.name}`).join("\n"),
-              "---",
-              "",
             ].join("\n\n");
+
+            if (onlyUseLocalResource === "enable") {
+              taskStore.updateTask(item.query, {
+                state: "completed",
+                learning: content,
+                sources,
+                images,
+              });
+              return content;
+            } else {
+              content += "\n\n---\n\n";
+            }
           }
+
           if (enableSearch) {
             if (searchProvider !== "model") {
               try {

@@ -146,14 +146,14 @@ export async function createSearchProvider({
         headers,
         credentials: "omit",
         body: JSON.stringify({
-          query,
+          query: query.replaceAll("\\", "").replaceAll('"', ""),
           search_depth: "advanced",
           topic: scope || "general",
           max_results: Number(maxResult),
           include_images: true,
           include_image_descriptions: true,
           include_answer: false,
-          include_raw_content: true,
+          include_raw_content: "markdown",
         }),
       }
     );

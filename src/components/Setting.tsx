@@ -159,10 +159,11 @@ const formSchema = z.object({
   searchMaxResult: z.number().min(1).max(10),
   language: z.string().optional(),
   theme: z.string().optional(),
-  debug: z.string().optional(),
-  references: z.string().optional(),
-  citationImage: z.string().optional(),
+  debug: z.enum(["enable", "disable"]).optional(),
+  references: z.enum(["enable", "disable"]).optional(),
+  citationImage: z.enum(["enable", "disable"]).optional(),
   smoothTextStreamType: z.enum(["character", "word", "line"]).optional(),
+  onlyUseLocalResource: z.enum(["enable", "disable"]).optional(),
 });
 
 function convertModelName(name: string) {
@@ -3457,6 +3458,34 @@ function Setting({ open, onClose }: SettingProps) {
                             </SelectItem>
                             <SelectItem value="line">
                               {t("setting.line")}
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="onlyUseLocalResource"
+                  render={({ field }) => (
+                    <FormItem className="from-item">
+                      <FormLabel className="from-label">
+                        <HelpTip tip={t("setting.useLocalResourceTip")}>
+                          {t("setting.useLocalResource")}
+                        </HelpTip>
+                      </FormLabel>
+                      <FormControl>
+                        <Select {...field} onValueChange={field.onChange}>
+                          <SelectTrigger className="form-field">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="enable">
+                              {t("setting.enable")}
+                            </SelectItem>
+                            <SelectItem value="disable">
+                              {t("setting.disable")}
                             </SelectItem>
                           </SelectContent>
                         </Select>

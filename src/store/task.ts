@@ -20,7 +20,7 @@ export interface TaskStore {
   knowledgeGraph: string;
 }
 
-interface TaskFunction {
+interface TaskActions {
   update: (tasks: SearchTask[]) => void;
   setId: (id: string) => void;
   setTitle: (title: string) => void;
@@ -65,7 +65,7 @@ const defaultValues: TaskStore = {
 };
 
 export const useTaskStore = create(
-  persist<TaskStore & TaskFunction>(
+  persist<TaskStore & TaskActions>(
     (set, get) => ({
       ...defaultValues,
       update: (tasks) => set(() => ({ tasks: [...tasks] })),

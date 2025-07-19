@@ -1,7 +1,11 @@
+import type { GoogleVertexProviderSettings } from "@ai-sdk/google-vertex/edge";
+import type { AzureOpenAIProviderSettings } from "@ai-sdk/azure";
+
 export interface AIProviderOptions {
   provider: string;
   baseURL: string;
   apiKey?: string;
+  auth?: Record<string, string>;
   headers?: Record<string, string>;
   model: string;
   settings?: any;
@@ -11,6 +15,7 @@ export async function createAIProvider({
   provider,
   apiKey,
   baseURL,
+  auth,
   headers,
   model,
   settings,
@@ -22,6 +27,25 @@ export async function createAIProvider({
       apiKey,
     });
     return google(model, settings);
+  } else if (provider === "google-vertex") {
+    const { createVertex } = await import("@ai-sdk/google-vertex/edge");
+    const googleVertexOptions: GoogleVertexProviderSettings = {};
+    if (auth) {
+      googleVertexOptions.project = auth.project;
+      googleVertexOptions.location = auth.location;
+    }
+    if (baseURL) {
+      googleVertexOptions.baseURL = baseURL;
+    }
+    if (auth?.clientEmail && auth?.privateKey) {
+      googleVertexOptions.googleCredentials = {
+        clientEmail: auth.clientEmail,
+        privateKey: auth.privateKey,
+        privateKeyId: auth.privateKeyId,
+      };
+    }
+    const googleVertex = createVertex(googleVertexOptions);
+    return googleVertex(model, settings);
   } else if (provider === "openai") {
     const { createOpenAI } = await import("@ai-sdk/openai");
     const openai = createOpenAI({
@@ -62,10 +86,17 @@ export async function createAIProvider({
     return mistral(model, settings);
   } else if (provider === "azure") {
     const { createAzure } = await import("@ai-sdk/azure");
-    const azure = createAzure({
-      baseURL,
-      apiKey,
-    });
+    const azureOptions: AzureOpenAIProviderSettings = {};
+    if (auth) {
+      azureOptions.resourceName = auth.resourceName;
+      azureOptions.apiKey = auth.apiKey;
+      azureOptions.apiVersion = auth.apiVersion;
+    }
+    if (baseURL) {
+      azureOptions.baseURL = baseURL;
+      azureOptions.apiKey = apiKey;
+    }
+    const azure = createAzure(azureOptions);
     return azure(model, settings);
   } else if (provider === "openrouter") {
     const { createOpenRouter } = await import("@openrouter/ai-sdk-provider");

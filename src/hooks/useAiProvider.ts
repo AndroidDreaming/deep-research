@@ -41,6 +41,30 @@ function useModelProvider() {
           options.baseURL = location.origin + "/api/ai/google/v1beta";
         }
         break;
+      case "google-vertex":
+        const {
+          googleVertexProject,
+          googleVertexLocation,
+          googleClientEmail,
+          googlePrivateKey,
+          googlePrivateKeyId,
+        } = useSettingStore.getState();
+        if (mode === "local") {
+          options.auth = {
+            project: googleVertexProject,
+            location: googleVertexLocation,
+          };
+          if (googleClientEmail && googlePrivateKey) {
+            options.auth.clientEmail = googleClientEmail;
+            options.auth.privateKey = googlePrivateKey;
+            if (googlePrivateKeyId) {
+              options.auth.privateKeyId = googlePrivateKeyId;
+            }
+          }
+        } else {
+          options.baseURL = location.origin + "/api/ai/google-vertex";
+        }
+        break;
       case "openai":
         const { openAIApiKey = "", openAIApiProxy } =
           useSettingStore.getState();
@@ -107,11 +131,17 @@ function useModelProvider() {
         }
         break;
       case "azure":
-        const { azureApiKey = "", azureResourceName } =
-          useSettingStore.getState();
+        const {
+          azureApiKey = "",
+          azureResourceName,
+          azureApiVersion,
+        } = useSettingStore.getState();
         if (mode === "local") {
-          options.baseURL = `https://${azureResourceName}.openai.azure.com/openai/deployments`;
-          options.apiKey = multiApiKeyPolling(azureApiKey);
+          options.auth = {
+            resourceName: azureResourceName,
+            apiKey: multiApiKeyPolling(azureApiKey),
+            apiVersion: azureApiVersion,
+          };
         } else {
           options.baseURL = location.origin + "/api/ai/azure";
         }
@@ -171,6 +201,7 @@ function useModelProvider() {
     if (mode === "proxy") {
       options.apiKey = generateSignature(accessPassword, Date.now());
     }
+
     return await createAIProvider(options);
   }
 
@@ -181,6 +212,13 @@ function useModelProvider() {
       case "google":
         const { thinkingModel, networkingModel } = useSettingStore.getState();
         return { thinkingModel, networkingModel };
+      case "google-vertex":
+        const { googleVertexThinkingModel, googleVertexNetworkingModel } =
+          useSettingStore.getState();
+        return {
+          thinkingModel: googleVertexThinkingModel,
+          networkingModel: googleVertexNetworkingModel,
+        };
       case "openai":
         const { openAIThinkingModel, openAINetworkingModel } =
           useSettingStore.getState();
@@ -265,6 +303,10 @@ function useModelProvider() {
       case "google":
         const { apiKey } = useSettingStore.getState();
         return apiKey.length > 0;
+      case "google-vertex":
+        const { googleVertexProject, googleVertexLocation } =
+          useSettingStore.getState();
+        return googleVertexProject !== "" && googleVertexLocation !== "";
       case "openai":
         const { openAIApiKey } = useSettingStore.getState();
         return openAIApiKey.length > 0;

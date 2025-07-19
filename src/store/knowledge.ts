@@ -7,7 +7,7 @@ export interface KnowledgeStore {
   knowledges: Knowledge[];
 }
 
-type KnowledgeFunction = {
+type KnowledgeActions = {
   save: (knowledge: Knowledge) => void;
   exist: (id: string) => boolean;
   get: (id: string) => Knowledge | null;
@@ -16,7 +16,7 @@ type KnowledgeFunction = {
 };
 
 export const useKnowledgeStore = create(
-  persist<KnowledgeStore & KnowledgeFunction>(
+  persist<KnowledgeStore & KnowledgeActions>(
     (set, get) => ({
       knowledges: [],
       save: (knowledge) => {
@@ -59,12 +59,12 @@ export const useKnowledgeStore = create(
       storage: {
         getItem: async (key: string) => {
           return await researchStore.getItem<
-            StorageValue<KnowledgeStore & KnowledgeFunction>
+            StorageValue<KnowledgeStore & KnowledgeActions>
           >(key);
         },
         setItem: async (
           key: string,
-          store: StorageValue<KnowledgeStore & KnowledgeFunction>
+          store: StorageValue<KnowledgeStore & KnowledgeActions>
         ) => {
           return await researchStore.setItem(key, {
             state: pick(store.state, ["knowledges"]),

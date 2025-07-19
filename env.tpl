@@ -1,12 +1,24 @@
 # (Optional) Server API Access Password for enhanced security
 ACCESS_PASSWORD=
 
+# (Deprecated) Server-side Gemini API Proxy URL. Default, `https://generativelanguage.googleapis.com`
+API_PROXY_BASE_URL=
+
 # (Optional) Server-side Gemini API Key (Required for server API calls)
 GOOGLE_GENERATIVE_AI_API_KEY=
 # (Optional) Server-side Gemini API Proxy URL. Default, `https://generativelanguage.googleapis.com`
 GOOGLE_GENERATIVE_AI_API_BASE_URL=
-# (Deprecated) Server-side Gemini API Proxy URL. Default, `https://generativelanguage.googleapis.com`
-API_PROXY_BASE_URL=
+
+# (Optional) The Google Cloud project ID that you want to use for the API calls.
+GOOGLE_VERTEX_PROJECT=
+# (Optional) The Google Cloud location that you want to use for the API calls, e.g. us-central1.
+GOOGLE_VERTEX_LOCATION=
+# (Optional) The client email from the Google Cloud account.
+GOOGLE_CLIENT_EMAIL=
+# (Optional) The private key from the Google Cloud account
+GOOGLE_PRIVATE_KEY=
+# (Optional) The private key ID from the Google Cloud account
+GOOGLE_PRIVATE_KEY_ID=
 
 # (Optional) Server-side OpenRouter API Key (Required for server API calls)
 OPENROUTER_API_KEY=
@@ -40,6 +52,8 @@ MISTRAL_API_BASE_URL=
 
 # (Optional) Server-side Azure API Key (Required for server API calls)
 AZURE_API_KEY=
+# (Optional) Server-side Azure API Version.
+AZURE_API_VERSION=
 # (Optional) Server-side Azure Resource Name. The resource name is used in the assembled URL: `https://{AZURE_RESOURCE_NAME}.openai.azure.com/openai/deployments`
 AZURE_RESOURCE_NAME=
 

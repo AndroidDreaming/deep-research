@@ -101,6 +101,13 @@ const formSchema = z.object({
   apiProxy: z.string().optional(),
   thinkingModel: z.string().optional(),
   networkingModel: z.string().optional(),
+  googleVertexProject: z.string().optional(),
+  googleVertexLocation: z.string().optional(),
+  googleClientEmail: z.string().optional(),
+  googlePrivateKey: z.string().optional(),
+  googlePrivateKeyId: z.string().optional(),
+  googleVertexThinkingModel: z.string().optional(),
+  googleVertexNetworkingModel: z.string().optional(),
   openRouterApiKey: z.string().optional(),
   openRouterApiProxy: z.string().optional(),
   openRouterThinkingModel: z.string().optional(),
@@ -475,16 +482,6 @@ function Setting({ open, onClose }: SettingProps) {
                             {!isDisabledAIProvider("mistral") ? (
                               <SelectItem value="mistral">Mistral</SelectItem>
                             ) : null}
-                            {!isDisabledAIProvider("azure") ? (
-                              <SelectItem value="azure">
-                                Azure OpenAI
-                              </SelectItem>
-                            ) : null}
-                            {!isDisabledAIProvider("openrouter") ? (
-                              <SelectItem value="openrouter">
-                                OpenRouter
-                              </SelectItem>
-                            ) : null}
                             {!isDisabledAIProvider("openaicompatible") ? (
                               <SelectItem value="openaicompatible">
                                 {t("setting.openAICompatible")}
@@ -493,6 +490,21 @@ function Setting({ open, onClose }: SettingProps) {
                             {!isDisabledAIProvider("pollinations") ? (
                               <SelectItem value="pollinations">
                                 Pollinations ({t("setting.free")})
+                              </SelectItem>
+                            ) : null}
+                            {!isDisabledAIProvider("azure") ? (
+                              <SelectItem value="azure">
+                                Azure OpenAI (Beta)
+                              </SelectItem>
+                            ) : null}
+                            {!isDisabledAIProvider("google-vertex") ? (
+                              <SelectItem value="google-vertex">
+                                Google Vertex (Alpha)
+                              </SelectItem>
+                            ) : null}
+                            {!isDisabledAIProvider("openrouter") ? (
+                              <SelectItem value="openrouter">
+                                OpenRouter
                               </SelectItem>
                             ) : null}
                             {!isDisabledAIProvider("ollama") ? (
@@ -553,6 +565,134 @@ function Setting({ open, onClose }: SettingProps) {
                                 updateSetting(
                                   "apiProxy",
                                   form.getValues("apiProxy")
+                                )
+                              }
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div
+                    className={cn("space-y-4", {
+                      hidden: provider !== "google-vertex",
+                    })}
+                  >
+                    <FormField
+                      control={form.control}
+                      name="googleVertexProject"
+                      render={({ field }) => (
+                        <FormItem className="from-item">
+                          <FormLabel className="from-label">
+                            Project
+                            <span className="ml-1 text-red-500 max-sm:hidden">
+                              *
+                            </span>
+                          </FormLabel>
+                          <FormControl className="form-field">
+                            <Input
+                              placeholder="The Google Cloud project ID"
+                              {...field}
+                              onBlur={() =>
+                                updateSetting(
+                                  "googleVertexProject",
+                                  form.getValues("googleVertexProject")
+                                )
+                              }
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="googleVertexLocation"
+                      render={({ field }) => (
+                        <FormItem className="from-item">
+                          <FormLabel className="from-label">
+                            Location
+                            <span className="ml-1 text-red-500 max-sm:hidden">
+                              *
+                            </span>
+                          </FormLabel>
+                          <FormControl className="form-field">
+                            <Input
+                              placeholder="The Google Cloud location"
+                              {...field}
+                              onBlur={() =>
+                                updateSetting(
+                                  "googleVertexLocation",
+                                  form.getValues("googleVertexLocation")
+                                )
+                              }
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="googleClientEmail"
+                      render={({ field }) => (
+                        <FormItem className="from-item">
+                          <FormLabel className="from-label">
+                            Client Email
+                          </FormLabel>
+                          <FormControl className="form-field">
+                            <Input
+                              placeholder="Google account client email"
+                              {...field}
+                              onBlur={() =>
+                                updateSetting(
+                                  "googleClientEmail",
+                                  form.getValues("googleClientEmail")
+                                )
+                              }
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="googlePrivateKey"
+                      render={({ field }) => (
+                        <FormItem className="from-item">
+                          <FormLabel className="from-label">
+                            Private Key
+                          </FormLabel>
+                          <FormControl className="form-field">
+                            <Password
+                              type="text"
+                              placeholder="Google account private key"
+                              {...field}
+                              onBlur={() =>
+                                updateSetting(
+                                  "googlePrivateKey",
+                                  form.getValues("googlePrivateKey")
+                                )
+                              }
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="googlePrivateKeyId"
+                      render={({ field }) => (
+                        <FormItem className="from-item">
+                          <FormLabel className="from-label">
+                            Private Key ID
+                          </FormLabel>
+                          <FormControl className="form-field">
+                            <Input
+                              placeholder="Google account private key ID"
+                              {...field}
+                              onBlur={() =>
+                                updateSetting(
+                                  "googlePrivateKeyId",
+                                  form.getValues("googlePrivateKeyId")
                                 )
                               }
                             />
@@ -1471,6 +1611,62 @@ function Setting({ open, onClose }: SettingProps) {
                                 </>
                               )}
                             </Button>
+                          </div>
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div
+                  className={cn("space-y-4", {
+                    hidden: provider !== "google-vertex",
+                  })}
+                >
+                  <FormField
+                    control={form.control}
+                    name="googleVertexThinkingModel"
+                    render={({ field }) => (
+                      <FormItem className="from-item">
+                        <FormLabel className="from-label">
+                          <HelpTip tip={t("setting.thinkingModelTip")}>
+                            {t("setting.thinkingModel")}
+                            <span className="ml-1 text-red-500 max-sm:hidden">
+                              *
+                            </span>
+                          </HelpTip>
+                        </FormLabel>
+                        <FormControl>
+                          <div className="form-field w-full">
+                            <Input
+                              placeholder={t("setting.modelListPlaceholder")}
+                              value={field.value}
+                              onChange={field.onChange}
+                            />
+                          </div>
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="googleVertexNetworkingModel"
+                    render={({ field }) => (
+                      <FormItem className="from-item">
+                        <FormLabel className="from-label">
+                          <HelpTip tip={t("setting.networkingModelTip")}>
+                            {t("setting.networkingModel")}
+                            <span className="ml-1 text-red-500 max-sm:hidden">
+                              *
+                            </span>
+                          </HelpTip>
+                        </FormLabel>
+                        <FormControl>
+                          <div className="form-field w-full">
+                            <Input
+                              placeholder={t("setting.modelListPlaceholder")}
+                              value={field.value}
+                              onChange={field.onChange}
+                            />
                           </div>
                         </FormControl>
                       </FormItem>
@@ -3503,8 +3699,7 @@ function Setting({ open, onClose }: SettingProps) {
           </Button>
           <Button
             className="flex-1"
-            type="submit"
-            onClick={form.handleSubmit(handleSubmit)}
+            onClick={() => handleSubmit(form.getValues())}
           >
             {t("setting.save")}
           </Button>

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import { getCustomModelList, multiApiKeyPolling } from "@/utils/model";
 import { verifySignature } from "@/utils/signature";
+import { generateAuthToken } from "@/utils/vertexAuth";
 
 const NODE_ENV = process.env.NODE_ENV;
 const accessPassword = process.env.ACCESS_PASSWORD || "";
@@ -15,6 +16,9 @@ const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY || "";
 const XAI_API_KEY = process.env.XAI_API_KEY || "";
 const MISTRAL_API_KEY = process.env.MISTRAL_API_KEY || "";
 const AZURE_API_KEY = process.env.AZURE_API_KEY || "";
+const GOOGLE_CLIENT_EMAIL = process.env.GOOGLE_CLIENT_EMAIL || "";
+const GOOGLE_PRIVATE_KEY = process.env.GOOGLE_PRIVATE_KEY || "";
+const GOOGLE_PRIVATE_KEY_ID = process.env.GOOGLE_PRIVATE_KEY_ID || "";
 const OPENAI_COMPATIBLE_API_KEY = process.env.OPENAI_COMPATIBLE_API_KEY || "";
 // Search provider API key
 const TAVILY_API_KEY = process.env.TAVILY_API_KEY || "";
@@ -404,14 +408,10 @@ export async function middleware(request: NextRequest) {
     }
   }
   if (request.nextUrl.pathname.startsWith("/api/ai/azure")) {
-    const authorization = request.headers.get("authorization") || "";
+    const authorization = request.headers.get("api-key") || "";
     const isDisabledModel = await hasDisabledAIModel();
     if (
-      !verifySignature(
-        authorization.substring(7),
-        accessPassword,
-        Date.now()
-      ) ||
+      !verifySignature(authorization, accessPassword, Date.now()) ||
       disabledAIProviders.includes("azure") ||
       isDisabledModel
     ) {
@@ -421,6 +421,51 @@ export async function middleware(request: NextRequest) {
       );
     } else {
       const apiKey = multiApiKeyPolling(AZURE_API_KEY);
+      if (apiKey) {
+        const requestHeaders = new Headers();
+        requestHeaders.set(
+          "Content-Type",
+          request.headers.get("Content-Type") || "application/json"
+        );
+        requestHeaders.set("api-key", apiKey);
+        return NextResponse.next({
+          request: {
+            headers: requestHeaders,
+          },
+        });
+      } else {
+        return NextResponse.json(
+          {
+            error: ERRORS.NO_API_KEY,
+          },
+          { status: 500 }
+        );
+      }
+    }
+  }
+  if (request.nextUrl.pathname.startsWith("/api/ai/google-vertex")) {
+    const authorization = request.headers.get("authorization") || "";
+    const isDisabledModel = await hasDisabledAIModel();
+    if (
+      !verifySignature(
+        authorization.substring(7),
+        accessPassword,
+        Date.now()
+      ) ||
+      disabledAIProviders.includes("google-vertex") ||
+      isDisabledModel
+    ) {
+      return NextResponse.json(
+        { error: ERRORS.NO_PERMISSIONS },
+        { status: 403 }
+      );
+    } else {
+      const apiKey = await generateAuthToken({
+        clientEmail: GOOGLE_CLIENT_EMAIL,
+        privateKey: GOOGLE_PRIVATE_KEY,
+        privateKeyId: GOOGLE_PRIVATE_KEY_ID,
+      });
+
       if (apiKey) {
         const requestHeaders = new Headers();
         requestHeaders.set(

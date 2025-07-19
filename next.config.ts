@@ -21,6 +21,7 @@ const XAI_API_BASE_URL = process.env.XAI_API_BASE_URL || "https://api.x.ai";
 const MISTRAL_API_BASE_URL =
   process.env.MISTRAL_API_BASE_URL || "https://api.mistral.ai";
 const AZURE_API_BASE_URL = `https://${process.env.AZURE_RESOURCE_NAME}.openai.azure.com/openai/deployments`;
+const GOOGLE_VERTEX_API_BASE_URL = `https://${process.env.GOOGLE_VERTEX_LOCATION}-aiplatform.googleapis.com/v1/projects/${process.env.GOOGLE_VERTEX_PROJECT}/locations/${process.env.GOOGLE_VERTEX_LOCATION}/publishers/google`;
 const OPENAI_COMPATIBLE_API_BASE_URL =
   process.env.OPENAI_COMPATIBLE_API_BASE_URL || "";
 const POLLINATIONS_API_BASE_URL =
@@ -77,6 +78,10 @@ export default async function Config(phase: string) {
           destination: `${
             GOOGLE_GENERATIVE_AI_API_BASE_URL || API_PROXY_BASE_URL
           }/:path*`,
+        },
+        {
+          source: "/api/ai/google-vertex/:path*",
+          destination: `${GOOGLE_VERTEX_API_BASE_URL}/:path*`,
         },
         {
           source: "/api/ai/openrouter/:path*",

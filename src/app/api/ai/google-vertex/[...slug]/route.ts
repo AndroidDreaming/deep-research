@@ -12,8 +12,7 @@ export const preferredRegion = [
   "kix1",
 ];
 
-const API_PROXY_BASE_URL = `https://${process.env.AZURE_RESOURCE_NAME}.openai.azure.com/openai/deployments`;
-const API_VERSION = process.env.AZURE_API_VERSION || "";
+const API_PROXY_BASE_URL = `https://${process.env.GOOGLE_VERTEX_LOCATION}-aiplatform.googleapis.com/v1/projects/${process.env.GOOGLE_VERTEX_PROJECT}/locations/${process.env.GOOGLE_VERTEX_LOCATION}/publishers/google`;
 
 async function handler(req: NextRequest) {
   let body;
@@ -23,21 +22,16 @@ async function handler(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const path = searchParams.getAll("slug");
   searchParams.delete("slug");
-  if (API_VERSION) searchParams.append("api-version", API_VERSION);
   const params = searchParams.toString();
 
   try {
-    if (API_PROXY_BASE_URL === "") {
-      throw new Error("API base url is missing.");
-    }
     let url = `${API_PROXY_BASE_URL}/${decodeURIComponent(path.join("/"))}`;
     if (params) url += `?${params}`;
-    console.log(url);
     const payload: RequestInit = {
       method: req.method,
       headers: {
         "Content-Type": req.headers.get("Content-Type") || "application/json",
-        "api-key": req.headers.get("api-key") || "",
+        Authorization: req.headers.get("Authorization") || "",
       },
     };
     if (body) payload.body = JSON.stringify(body);

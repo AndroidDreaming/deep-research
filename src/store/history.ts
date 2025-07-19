@@ -14,7 +14,7 @@ export interface HistoryStore {
   history: ResearchHistory[];
 }
 
-interface HistoryFunction {
+interface HistoryActions {
   save: (taskStore: TaskStore) => string;
   load: (id: string) => TaskStore | void;
   update: (id: string, taskStore: TaskStore) => boolean;
@@ -24,7 +24,7 @@ interface HistoryFunction {
 const nanoid = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyz", 12);
 
 export const useHistoryStore = create(
-  persist<HistoryStore & HistoryFunction>(
+  persist<HistoryStore & HistoryActions>(
     (set, get) => ({
       history: [],
       save: (taskStore) => {
@@ -72,12 +72,12 @@ export const useHistoryStore = create(
       storage: {
         getItem: async (key: string) => {
           return await researchStore.getItem<
-            StorageValue<HistoryStore & HistoryFunction>
+            StorageValue<HistoryStore & HistoryActions>
           >(key);
         },
         setItem: async (
           key: string,
-          store: StorageValue<HistoryStore & HistoryFunction>
+          store: StorageValue<HistoryStore & HistoryActions>
         ) => {
           return await researchStore.setItem(key, {
             state: pick(store.state, ["history"]),

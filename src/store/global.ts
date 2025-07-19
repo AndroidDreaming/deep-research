@@ -6,13 +6,13 @@ interface GlobalStore {
   openKnowledge: boolean;
 }
 
-interface GlobalFunction {
+interface GlobalActions {
   setOpenSetting: (visible: boolean) => void;
   setOpenHistory: (visible: boolean) => void;
   setOpenKnowledge: (visible: boolean) => void;
 }
 
-export const useGlobalStore = create<GlobalStore & GlobalFunction>((set) => ({
+export const useGlobalStore = create<GlobalStore & GlobalActions>((set) => ({
   openSetting: false,
   openHistory: false,
   openKnowledge: false,

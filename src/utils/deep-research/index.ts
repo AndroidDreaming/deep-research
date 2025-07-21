@@ -95,7 +95,7 @@ class DeepResearch {
       provider: AIProvider.provider,
       model: AIProvider.taskModel,
       settings:
-        AIProvider.provider === "google" &&
+        ["google", "google-vertex"].includes(AIProvider.provider) &&
         isNetworkingModel(AIProvider.taskModel)
           ? { useSearchGrounding: true }
           : undefined,
@@ -210,7 +210,7 @@ class DeepResearch {
           // Enable OpenAI's built-in search tool
           if (
             provider === "model" &&
-            ["openai", "azure"].includes(taskModel) &&
+            ["openai", "azure", "openaicompatible"].includes(taskModel) &&
             taskModel.startsWith("gpt-4o")
           ) {
             const { openai } = await import("@ai-sdk/openai");

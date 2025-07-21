@@ -58,13 +58,85 @@ function useDeepResearch() {
   const { search } = useWebSearch();
   const [status, setStatus] = useState<string>("");
 
+  async function generateSearchSettings(searchModel: string) {
+    const { provider, enableSearch, searchProvider, searchMaxResult } =
+      useSettingStore.getState();
+
+    if (enableSearch && searchProvider === "model") {
+      const createModel = (model: string) => {
+        // Enable Gemini's built-in search tool
+        if (
+          ["google", "google-vertex"].includes(provider) &&
+          isNetworkingModel(model)
+        ) {
+          return createModelProvider(model, { useSearchGrounding: true });
+        } else {
+          return createModelProvider(model);
+        }
+      };
+      const getTools = (model: string) => {
+        // Enable OpenAI's built-in search tool
+        if (
+          ["openai", "azure", "openaicompatible"].includes(provider) &&
+          model.startsWith("gpt-4o")
+        ) {
+          return {
+            web_search_preview: openai.tools.webSearchPreview({
+              // optional configuration:
+              searchContextSize: searchMaxResult > 5 ? "high" : "medium",
+            }),
+          } as Tools;
+        }
+      };
+      const getProviderOptions = (model: string) => {
+        // Enable OpenRouter's built-in search tool
+        if (provider === "openrouter") {
+          return {
+            openrouter: {
+              plugins: [
+                {
+                  id: "web",
+                  max_results: searchMaxResult, // Defaults to 5
+                },
+              ],
+            },
+          } as ProviderOptions;
+        } else if (
+          provider === "xai" &&
+          model.startsWith("grok-3") &&
+          !model.includes("mini")
+        ) {
+          return {
+            xai: {
+              search_parameters: {
+                mode: "auto",
+                max_search_results: searchMaxResult,
+              },
+            },
+          } as ProviderOptions;
+        }
+      };
+
+      return {
+        model: await createModel(searchModel),
+        tools: getTools(searchModel),
+        providerOptions: getProviderOptions(searchModel),
+      };
+    } else {
+      return {
+        model: await createModelProvider(searchModel),
+      };
+    }
+  }
+
   async function askQuestions() {
     const { question } = useTaskStore.getState();
     const { thinkingModel } = getModel();
     setStatus(t("research.common.thinking"));
     const thinkTagStreamProcessor = new ThinkTagStreamProcessor();
+    const searchSettings = await generateSearchSettings(thinkingModel);
     const result = streamText({
-      model: await createModelProvider(thinkingModel),
+      ...searchSettings,
       system: getSystemPrompt(),
       prompt: [
         generateQuestionsPrompt(question),
@@ -100,8 +172,9 @@ function useDeepResearch() {
     const { thinkingModel } = getModel();
     setStatus(t("research.common.thinking"));
     const thinkTagStreamProcessor = new ThinkTagStreamProcessor();
+    const searchSettings = await generateSearchSettings(thinkingModel);
     const result = streamText({
-      model: await createModelProvider(thinkingModel),
+      ...searchSettings,
       system: getSystemPrompt(),
       prompt: [writeReportPlanPrompt(query), getResponseLanguagePrompt()].join(
         "\n\n"
@@ -181,11 +254,9 @@ function useDeepResearch() {
 
   async function runSearchTask(queries: SearchTask[]) {
     const {
-      provider,
       enableSearch,
       searchProvider,
       parallelSearch,
-      searchMaxResult,
       references,
       onlyUseLocalResource,
     } = useSettingStore.getState();
@@ -194,67 +265,6 @@ function useDeepResearch() {
     setStatus(t("research.common.research"));
     const plimit = Plimit(parallelSearch);
     const thinkTagStreamProcessor = new ThinkTagStreamProcessor();
-    const createModel = (model: string) => {
-      // Enable Gemini's built-in search tool
-      if (
-        enableSearch &&
-        searchProvider === "model" &&
-        provider === "google" &&
-        isNetworkingModel(model)
-      ) {
-        return createModelProvider(model, { useSearchGrounding: true });
-      } else {
-        return createModelProvider(model);
-      }
-    };
-    const getTools = (model: string) => {
-      // Enable OpenAI's built-in search tool
-      if (enableSearch && searchProvider === "model") {
-        if (
-          ["openai", "azure"].includes(provider) &&
-          model.startsWith("gpt-4o")
-        ) {
-          return {
-            web_search_preview: openai.tools.webSearchPreview({
-              // optional configuration:
-              searchContextSize: "medium",
-            }),
-          } as Tools;
-        }
-      }
-      return undefined;
-    };
-    const getProviderOptions = (model: string) => {
-      if (enableSearch && searchProvider === "model") {
-        // Enable OpenRouter's built-in search tool
-        if (provider === "openrouter") {
-          return {
-            openrouter: {
-              plugins: [
-                {
-                  id: "web",
-                  max_results: searchMaxResult, // Defaults to 5
-                },
-              ],
-            },
-          } as ProviderOptions;
-        } else if (
-          provider === "xai" &&
-          model.startsWith("grok-3") &&
-          !model.includes("mini")
-        ) {
-          return {
-            xai: {
-              search_parameters: {
-                mode: "auto",
-                max_search_results: searchMaxResult,
-              },
-            },
-          } as ProviderOptions;
-        }
-      }
-      return undefined;
-    };
     await Promise.all(
       queries.map((item) => {
         plimit(async () => {
@@ -311,7 +321,7 @@ function useDeepResearch() {
               const enableReferences =
                 sources.length > 0 && references === "enable";
               searchResult = streamText({
-                model: await createModel(networkingModel),
+                model: await createModelProvider(networkingModel),
                 system: getSystemPrompt(),
                 prompt: [
                   processSearchResultPrompt(
@@ -326,15 +336,16 @@ function useDeepResearch() {
                 onError: handleError,
               });
             } else {
+              const searchSettings = await generateSearchSettings(
+                networkingModel
+              );
               searchResult = streamText({
-                model: await createModel(networkingModel),
+                ...searchSettings,
                 system: getSystemPrompt(),
                 prompt: [
                   processResultPrompt(item.query, item.researchGoal),
                   getResponseLanguagePrompt(),
                 ].join("\n\n"),
-                tools: getTools(networkingModel),
-                providerOptions: getProviderOptions(networkingModel),
                 experimental_transform: smoothTextStream(smoothTextStreamType),
                 onError: handleError,
               });

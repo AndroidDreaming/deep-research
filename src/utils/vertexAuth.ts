@@ -22,6 +22,10 @@ export interface GoogleCredentials {
 const base64url = (str: string) => {
   return btoa(str).replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
 };
+
+const decodeBase64 = (base64: string) => {
+  return Buffer.from(base64, "base64").toString("utf-8");
+};
 const importPrivateKey = async (pemKey: string) => {
   const pemHeader = "-----BEGIN PRIVATE KEY-----";
   const pemFooter = "-----END PRIVATE KEY-----";
@@ -33,7 +37,7 @@ const importPrivateKey = async (pemKey: string) => {
     .replace(/\s/g, "");
 
   // Decode base64 to binary
-  const binaryString = atob(pemContents);
+  const binaryString = decodeBase64(pemContents);
 
   // Convert binary string to Uint8Array
   const binaryData = new Uint8Array(binaryString.length);

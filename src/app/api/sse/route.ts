@@ -75,8 +75,6 @@ export async function POST(req: NextRequest) {
           } else if (event === "error") {
             console.error(data);
             controller.close();
-          } else {
-            console.warn(`Unknown event: ${event}`);
           }
           controller.enqueue(
             encoder.encode(

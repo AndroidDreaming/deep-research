@@ -44,6 +44,7 @@ const XAI_API_KEY = process.env.XAI_API_KEY || "";
 const MISTRAL_API_KEY = process.env.MISTRAL_API_KEY || "";
 const AZURE_API_KEY = process.env.AZURE_API_KEY || "";
 const OPENAI_COMPATIBLE_API_KEY = process.env.OPENAI_COMPATIBLE_API_KEY || "";
+const GOOGLE_VERTEX_API_BASE_URL = `https://${process.env.GOOGLE_VERTEX_LOCATION}-aiplatform.googleapis.com/v1/projects/${process.env.GOOGLE_VERTEX_PROJECT}/locations/${process.env.GOOGLE_VERTEX_LOCATION}/publishers/google`;
 // Search provider API key
 const TAVILY_API_KEY = process.env.TAVILY_API_KEY || "";
 const FIRECRAWL_API_KEY = process.env.FIRECRAWL_API_KEY || "";
@@ -74,6 +75,8 @@ export function getAIProviderBaseURL(provider: string) {
       return completePath(POLLINATIONS_API_BASE_URL, "/v1");
     case "ollama":
       return completePath(OLLAMA_API_BASE_URL, "/api");
+    case "google-vertex":
+      return completePath(GOOGLE_VERTEX_API_BASE_URL);
     default:
       throw new Error("Unsupported Provider: " + provider);
   }
@@ -99,6 +102,7 @@ export function getAIProviderApiKey(provider: string) {
       return OPENROUTER_API_KEY;
     case "openaicompatible":
       return OPENAI_COMPATIBLE_API_KEY;
+    case "google-vertex":
     case "pollinations":
     case "ollama":
       return "";

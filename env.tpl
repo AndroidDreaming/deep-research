@@ -22,7 +22,7 @@ GOOGLE_PRIVATE_KEY_ID=
 
 # (Optional) Server-side OpenRouter API Key (Required for server API calls)
 OPENROUTER_API_KEY=
-# (Optional) Server-side OpenRouter API Proxy URL. Default, `https://openrouter.ai`
+# (Optional) Server-side OpenRouter API Proxy URL. Default, `https://openrouter.ai/api`
 OPENROUTER_API_BASE_URL=
 
 # (Optional) Server-side OpenAI API Key (Required for server API calls)

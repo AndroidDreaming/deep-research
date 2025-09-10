@@ -150,9 +150,10 @@ function useModelProvider() {
         const { openRouterApiKey = "", openRouterApiProxy } =
           useSettingStore.getState();
         if (mode === "local") {
+          const baseUrl = openRouterApiProxy || OPENROUTER_BASE_URL;
           options.baseURL = completePath(
-            openRouterApiProxy || OPENROUTER_BASE_URL,
-            "/api/v1"
+            baseUrl,
+            baseUrl.endsWith("/api") ? "/v1" : "/api/v1"
           );
           options.apiKey = multiApiKeyPolling(openRouterApiKey);
         } else {

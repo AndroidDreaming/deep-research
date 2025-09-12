@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { streamText, smoothStream, type JSONValue, type Tool } from "ai";
+import {
+  streamText,
+  smoothStream,
+  type JSONValue,
+  type Tool,
+  type UserContent,
+} from "ai";
 import { parsePartialJson } from "@ai-sdk/ui-utils";
 import { openai } from "@ai-sdk/openai";
 import { type GoogleGenerativeAIProviderMetadata } from "@ai-sdk/google";
@@ -501,7 +507,8 @@ function useDeepResearch() {
   }
 
   async function writeFinalReport() {
-    const { citationImage, references } = useSettingStore.getState();
+    const { citationImage, references, useFileFormatResource } =
+      useSettingStore.getState();
     const {
       reportPlan,
       tasks,
@@ -528,24 +535,75 @@ function useDeepResearch() {
     );
     const enableCitationImage = images.length > 0 && citationImage === "enable";
     const enableReferences = sources.length > 0 && references === "enable";
+    const enableFileFormatResource = useFileFormatResource === "enable";
     const thinkTagStreamProcessor = new ThinkTagStreamProcessor();
+
+    const sourceList = enableReferences
+      ? sources.map((item) => pick(item, ["title", "url"]))
+      : [];
+    const imageList = enableCitationImage ? images : [];
+    const file = new File(
+      [
+        [
+          `<LEARNINGS>\n${learnings
+            .map((detail) => `<learning>\n${detail}\n</learning>`)
+            .join("\n")}\n</LEARNINGS>`,
+          `<SOURCES>\n${sourceList
+            .map(
+              (item, idx) =>
+                `<source index="${idx + 1}" url="${item.url}">\n${
+                  item.title
+                }\n</source>`
+            )
+            .join("\n")}\n</SOURCES>`,
+          `<IMAGES>\n${imageList
+            .map(
+              (source, idx) =>
+                `${idx + 1}. ![${source.description}](${source.url})`
+            )
+            .join("\n")}\n</IMAGES>`,
+        ].join("\n\n"),
+      ],
+      "resources.md",
+      { type: "text/markdown" }
+    );
+    const fileData = await file.arrayBuffer();
+    const messageContent: UserContent = [
+      {
+        type: "text",
+        text: [
+          writeFinalReportPrompt(
+            reportPlan,
+            learnings,
+            sourceList,
+            imageList,
+            requirement,
+            enableCitationImage,
+            enableReferences,
+            enableFileFormatResource
+          ),
+          getResponseLanguagePrompt(),
+        ].join("\n\n"),
+      },
+    ];
+    if (enableFileFormatResource) {
+      messageContent.push({
+        type: "file",
+        mimeType: "text/markdown",
+        filename: "resources.md",
+        data: fileData,
+      });
+    }
+
     const result = streamText({
       model: await createModelProvider(thinkingModel),
       system: [getSystemPrompt(), outputGuidelinesPrompt].join("\n\n"),
-      prompt: [
-        writeFinalReportPrompt(
-          reportPlan,
-          learnings,
-          enableReferences
-            ? sources.map((item) => pick(item, ["title", "url"]))
-            : [],
-          enableCitationImage ? images : [],
-          requirement,
-          enableCitationImage,
-          enableReferences
-        ),
-        getResponseLanguagePrompt(),
-      ].join("\n\n"),
+      messages: [
+        {
+          role: "user",
+          content: messageContent,
+        },
+      ],
       temperature: 0.5,
       experimental_transform: smoothTextStream(smoothTextStreamType),
       onError: handleError,

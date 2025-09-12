@@ -327,6 +327,8 @@
     "citationImageTip": "Bật hình ảnh tham khảo để chèn hình minh họa vào báo cáo.",
     "textOutputMode": "Chế độ xuất văn bản",
     "textOutputModeTip": "Hiệu ứng xuất văn bản của AI. Ký tự, xuất văn bản giống như máy đánh chữ. Từ, xuất theo từ, đầu ra hiệu quả nhất. Dòng, hiệu ứng đầu ra ổn định nhất.",
+    "fileFormatResource": "Tệp đính kèm",
+    "fileFormatResourceTip": "Sử dụng tệp đính kèm định dạng có thể giảm thiểu hiệu quả việc sử dụng mã thông báo và tránh vượt quá giới hạn ngữ cảnh tối đa của mô hình. Điều này chỉ áp dụng cho các mô hình hỗ trợ hiểu tài liệu.",
     "character": "Ký tự",
     "word": "Từ",
     "line": "Dòng",

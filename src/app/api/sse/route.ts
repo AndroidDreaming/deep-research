@@ -32,6 +32,7 @@ export async function POST(req: NextRequest) {
     maxResult,
     enableCitationImage = true,
     enableReferences = true,
+    enableFileFormatResource = false,
   } = await req.json();
 
   const encoder = new TextEncoder();
@@ -89,7 +90,12 @@ export async function POST(req: NextRequest) {
       });
 
       try {
-        await deepResearch.start(query, enableCitationImage, enableReferences);
+        await deepResearch.start(
+          query,
+          enableCitationImage,
+          enableReferences,
+          enableFileFormatResource
+        );
       } catch (err) {
         throw new Error(err instanceof Error ? err.message : "Unknown error");
       }

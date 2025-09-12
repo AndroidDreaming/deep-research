@@ -327,6 +327,8 @@
     "citationImageTip": "Enabling reference images will attempt to add content-related images to the final report through a prompt.",
     "textOutputMode": "Text Output Mode",
     "textOutputModeTip": "Text output effect of AI. Characters, output text like a typewriter. Words, output by word, the output is most efficient. Lines, the output effect is most stable.",
+    "fileFormatResource": "File Attachment",
+    "fileFormatResourceTip": "Using file-format attachment can effectively reduce token usage and avoid exceeding the model's maximum context limit. This is only valid for models that support document understanding.",
     "character": "Character",
     "word": "Word",
     "line": "Line",

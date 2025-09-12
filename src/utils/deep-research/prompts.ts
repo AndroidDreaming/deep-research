@@ -120,7 +120,8 @@ export function writeFinalReportPrompt(
   images: ImageSource[],
   requirement: string,
   enableCitationImage: boolean,
-  enableReferences: boolean
+  enableReferences: boolean,
+  enableFileFormatResource: boolean
 ) {
   const learnings = learning.map(
     (detail) => `<learning>\n${detail}\n</learning>`
@@ -140,8 +141,23 @@ export function writeFinalReportPrompt(
     (enableReferences ? `\n\n${finalReportReferencesPrompt}` : "")
   )
     .replace("{plan}", plan)
-    .replace("{learnings}", learnings.join("\n"))
-    .replace("{sources}", sources.join("\n"))
-    .replace("{images}", imageList.join("\n"))
+    .replace(
+      "{learnings}",
+      enableFileFormatResource
+        ? "**Please get all the learnings information from the attached file `resources.md`.**"
+        : learnings.join("\n")
+    )
+    .replace(
+      "{sources}",
+      enableFileFormatResource
+        ? "**Please get all the sources from the attached file `resources.md`.**"
+        : sources.join("\n")
+    )
+    .replace(
+      "{images}",
+      enableFileFormatResource
+        ? "**Please get all the images from the attached file `resources.md`.**"
+        : imageList.join("\n")
+    )
     .replace("{requirement}", requirement);
 }

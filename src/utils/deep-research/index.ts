@@ -1,4 +1,4 @@
-import { streamText, generateText } from "ai";
+import { streamText, generateText, type UserContent } from "ai";
 import { type GoogleGenerativeAIProviderMetadata } from "@ai-sdk/google";
 import { createAIProvider } from "./provider";
 import { createSearchProvider } from "./search";
@@ -385,7 +385,8 @@ class DeepResearch {
     reportPlan: string,
     tasks: DeepResearchSearchResult[],
     enableCitationImage = true,
-    enableReferences = true
+    enableReferences = true,
+    enableFileFormatResource = true
   ): Promise<FinalReportResult> {
     this.onMessage("progress", { step: "final-report", status: "start" });
     const thinkTagStreamProcessor = new ThinkTagStreamProcessor();
@@ -398,21 +399,75 @@ class DeepResearch {
       flat(tasks.map((item) => item.images || [])),
       (item) => item.url
     );
+
+    const sourceList = enableReferences
+      ? sources.map((item) => pick(item, ["title", "url"]))
+      : [];
+    const imageList = enableCitationImage ? images : [];
+    const file = new File(
+      [
+        [
+          `<LEARNINGS>\n${learnings
+            .map((detail) => `<learning>\n${detail}\n</learning>`)
+            .join("\n")}\n</LEARNINGS>`,
+          `<SOURCES>\n${sourceList
+            .map(
+              (item, idx) =>
+                `<source index="${idx + 1}" url="${item.url}">\n${
+                  item.title
+                }\n</source>`
+            )
+            .join("\n")}\n</SOURCES>`,
+          `<IMAGES>\n${imageList
+            .map(
+              (source, idx) =>
+                `${idx + 1}. ![${source.description}](${source.url})`
+            )
+            .join("\n")}\n</IMAGES>`,
+        ].join("\n\n"),
+      ],
+      "resources.md",
+      { type: "text/markdown" }
+    );
+    const fileData = await file.arrayBuffer();
+
+    const messageContent: UserContent = [
+      {
+        type: "text",
+        text: [
+          writeFinalReportPrompt(
+            reportPlan,
+            learnings,
+            sourceList,
+            imageList,
+            "",
+            imageList.length > 0 && enableCitationImage,
+            sourceList.length > 0 && enableReferences,
+            enableFileFormatResource
+          ),
+          this.getResponseLanguagePrompt(),
+        ].join("\n\n"),
+      },
+    ];
+    if (enableFileFormatResource) {
+      messageContent.push({
+        type: "file",
+        mimeType: "text/markdown",
+        filename: "resources.md",
+        data: fileData,
+      });
+    }
+
     const result = streamText({
       model: await this.getThinkingModel(),
       system: [getSystemPrompt(), outputGuidelinesPrompt].join("\n\n"),
-      prompt: [
-        writeFinalReportPrompt(
-          reportPlan,
-          learnings,
-          sources.map((item) => pick(item, ["title", "url"])),
-          images,
-          "",
-          images.length > 0 && enableCitationImage,
-          sources.length > 0 && enableReferences
-        ),
-        this.getResponseLanguagePrompt(),
-      ].join("\n\n"),
+      messages: [
+        {
+          role: "user",
+          content: messageContent,
+        },
+      ],
+      temperature: 0.5,
     });
     let content = "";
     this.onMessage("message", { type: "text", text: "<final-report>\n" });
@@ -475,7 +530,8 @@ class DeepResearch {
   async start(
     query: string,
     enableCitationImage = true,
-    enableReferences = true
+    enableReferences = true,
+    enableFileFormatResource = false
   ) {
     try {
       const reportPlan = await this.writeReportPlan(query);
@@ -485,7 +541,8 @@ class DeepResearch {
         reportPlan,
         results,
         enableCitationImage,
-        enableReferences
+        enableReferences,
+        enableFileFormatResource
       );
       return finalReport;
     } catch (err) {

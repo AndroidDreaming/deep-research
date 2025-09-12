@@ -171,6 +171,7 @@ const formSchema = z.object({
   citationImage: z.enum(["enable", "disable"]).optional(),
   smoothTextStreamType: z.enum(["character", "word", "line"]).optional(),
   onlyUseLocalResource: z.enum(["enable", "disable"]).optional(),
+  useFileFormatResource: z.enum(["enable", "disable"]).optional(),
 });
 
 function convertModelName(name: string) {
@@ -3669,6 +3670,34 @@ function Setting({ open, onClose }: SettingProps) {
                       <FormLabel className="from-label">
                         <HelpTip tip={t("setting.useLocalResourceTip")}>
                           {t("setting.useLocalResource")}
+                        </HelpTip>
+                      </FormLabel>
+                      <FormControl>
+                        <Select {...field} onValueChange={field.onChange}>
+                          <SelectTrigger className="form-field">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="enable">
+                              {t("setting.enable")}
+                            </SelectItem>
+                            <SelectItem value="disable">
+                              {t("setting.disable")}
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="useFileFormatResource"
+                  render={({ field }) => (
+                    <FormItem className="from-item">
+                      <FormLabel className="from-label">
+                        <HelpTip tip={t("setting.fileFormatResourceTip")}>
+                          {t("setting.fileFormatResource")}
                         </HelpTip>
                       </FormLabel>
                       <FormControl>

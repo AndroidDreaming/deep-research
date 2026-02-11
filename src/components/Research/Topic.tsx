@@ -15,13 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import ResourceList from "@/components/Knowledge/ResourceList";
 import Crawler from "@/components/Knowledge/Crawler";
 import { Button } from "@/components/Internal/Button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
+import { Form, FormField } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import {
   DropdownMenu,
@@ -33,6 +27,7 @@ import useDeepResearch from "@/hooks/useDeepResearch";
 import useAiProvider from "@/hooks/useAiProvider";
 import useKnowledge from "@/hooks/useKnowledge";
 import useAccurateTimer from "@/hooks/useAccurateTimer";
+import useSubmitShortcut from "@/hooks/useSubmitShortcut";
 import { useGlobalStore } from "@/store/global";
 import { useSettingStore } from "@/store/setting";
 import { useTaskStore } from "@/store/task";
@@ -41,6 +36,9 @@ import { useHistoryStore } from "@/store/history";
 const formSchema = z.object({
   topic: z.string().min(2),
 });
+
+const TOPIC_FIELD_ID = "research-topic-field";
+const RESOURCE_TRIGGER_ID = "knowledge-resource-trigger";
 
 function Topic() {
   const { t } = useTranslation();
@@ -63,6 +61,33 @@ function Topic() {
       topic: taskStore.question,
     },
   });
+  const topicPresets: Array<{ id: string; label: string; value: string }> = [
+    {
+      id: "market",
+      label: t("research.topic.presets.marketLabel"),
+      value: t("research.topic.presets.marketPrompt"),
+    },
+    {
+      id: "technical",
+      label: t("research.topic.presets.technicalLabel"),
+      value: t("research.topic.presets.technicalPrompt"),
+    },
+    {
+      id: "comparison",
+      label: t("research.topic.presets.comparisonLabel"),
+      value: t("research.topic.presets.comparisonPrompt"),
+    },
+  ];
+  const handleTopicSubmitShortcut = useSubmitShortcut(() => {
+    void form.handleSubmit(handleSubmit)();
+  });
+
+  function applyTopicPreset(value: string): void {
+    form.setValue("topic", value, {
+      shouldDirty: true,
+      shouldTouch: true,
+    });
+  }
 
   function handleCheck(): boolean {
     const { mode } = useSettingStore.getState();
@@ -146,64 +171,93 @@ function Topic() {
             control={form.control}
             name="topic"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel className="mb-2 text-base font-semibold">
+              <div className="space-y-2">
+                <label
+                  className="mb-2 block text-base font-semibold"
+                  htmlFor={TOPIC_FIELD_ID}
+                >
                   {t("research.topic.topicLabel")}
-                </FormLabel>
-                <FormControl>
-                  <Textarea
-                    rows={3}
-                    placeholder={t("research.topic.topicPlaceholder")}
-                    {...field}
-                  />
-                </FormControl>
-              </FormItem>
+                </label>
+                <Textarea
+                  id={TOPIC_FIELD_ID}
+                  rows={3}
+                  placeholder={t("research.topic.topicPlaceholder")}
+                  onKeyDown={handleTopicSubmitShortcut}
+                  {...field}
+                />
+                <p className="text-xs text-muted-foreground">
+                  {t("research.common.submitShortcut")}
+                </p>
+                <div>
+                  <p className="text-xs text-muted-foreground mb-2">
+                    {t("research.topic.presetsLabel")}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {topicPresets.map((preset) => (
+                      <Button
+                        key={preset.id}
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={() => applyTopicPreset(preset.value)}
+                      >
+                        {preset.label}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              </div>
             )}
           />
-          <FormItem className="mt-2">
-            <FormLabel className="mb-2 text-base font-semibold">
+          <div className="mt-2 space-y-2">
+            <label
+              className="mb-2 block text-base font-semibold"
+              htmlFor={RESOURCE_TRIGGER_ID}
+            >
               {t("knowledge.localResourceTitle")}
-            </FormLabel>
-            <FormControl onSubmit={(ev) => ev.stopPropagation()}>
-              <div>
-                {taskStore.resources.length > 0 ? (
-                  <ResourceList
-                    className="pb-2 mb-2 border-b"
-                    resources={taskStore.resources}
-                    onRemove={taskStore.removeResource}
-                  />
-                ) : null}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <div className="inline-flex border p-2 rounded-md text-sm cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800">
-                      <FilePlus className="w-5 h-5" />
-                      <span className="ml-1">{t("knowledge.addResource")}</span>
-                    </div>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem onClick={() => openKnowledgeList()}>
-                      <BookText />
-                      <span>{t("knowledge.knowledge")}</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() =>
-                        handleCheck() && fileInputRef.current?.click()
-                      }
-                    >
-                      <Paperclip />
-                      <span>{t("knowledge.localFile")}</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => handleCheck() && setOpenCrawler(true)}
-                    >
-                      <Link />
-                      <span>{t("knowledge.webPage")}</span>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            </FormControl>
-          </FormItem>
+            </label>
+            <div>
+              {taskStore.resources.length > 0 ? (
+                <ResourceList
+                  className="pb-2 mb-2 border-b"
+                  resources={taskStore.resources}
+                  onRemove={taskStore.removeResource}
+                />
+              ) : null}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    id={RESOURCE_TRIGGER_ID}
+                    className="inline-flex items-center border p-2 rounded-md text-sm cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800"
+                    type="button"
+                  >
+                    <FilePlus className="w-5 h-5" />
+                    <span className="ml-1">{t("knowledge.addResource")}</span>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem onClick={() => openKnowledgeList()}>
+                    <BookText />
+                    <span>{t("knowledge.knowledge")}</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() =>
+                      handleCheck() && fileInputRef.current?.click()
+                    }
+                  >
+                    <Paperclip />
+                    <span>{t("knowledge.localFile")}</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => handleCheck() && setOpenCrawler(true)}
+                  >
+                    <Link />
+                    <span>{t("knowledge.webPage")}</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
           <Button className="w-full mt-4" disabled={isThinking} type="submit">
             {isThinking ? (
               <>

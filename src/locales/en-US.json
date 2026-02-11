@@ -4,6 +4,24 @@
   "openSource": "Open Source",
   "copyright": "Created with ❤️ by {{name}} team",
   "searchPlaceholder": "Please enter keywords",
+  "header": {
+    "session": {
+      "export": "Export Session",
+      "import": "Import Session",
+      "exportSuccess": "Current session exported.",
+      "importSuccess": "Session imported successfully.",
+      "importFailed": "Failed to import session snapshot."
+    },
+    "shortcuts": {
+      "title": "Power Shortcuts",
+      "openSetting": "Open settings",
+      "openHistory": "Open history",
+      "openKnowledge": "Open knowledge base",
+      "exportSession": "Export current session",
+      "importSession": "Import session snapshot",
+      "toggleHelp": "Toggle shortcut help"
+    }
+  },
   "research": {
     "common": {
       "startThinking": "Start Thinking",
@@ -29,12 +47,22 @@
       "save": "Save",
       "copy": "Copy",
       "export": "Export",
-      "delete": "Delete"
+      "delete": "Delete",
+      "submitShortcut": "Shortcut: Ctrl/Cmd + Enter"
     },
     "topic": {
       "title": "1. Research Topics",
       "topicLabel": "1.1 Research topics",
-      "topicPlaceholder": "Any questions you want to know..."
+      "topicPlaceholder": "Any questions you want to know...",
+      "presetsLabel": "Quick start templates",
+      "presets": {
+        "marketLabel": "Market map",
+        "marketPrompt": "Map the current market landscape for [your topic]. Compare major vendors, pricing models, market share trends, and key risks over the next 12 months.",
+        "technicalLabel": "Technical deep dive",
+        "technicalPrompt": "Perform a technical deep dive on [your topic]. Explain architecture options, implementation tradeoffs, performance constraints, and recommended rollout strategy.",
+        "comparisonLabel": "Compare options",
+        "comparisonPrompt": "Compare the top solutions for [your topic]. Build a decision matrix covering features, cost, integration effort, security/compliance, and long-term maintainability."
+      }
     },
     "feedback": {
       "title": "2. Ask Question",
@@ -50,7 +78,27 @@
       "suggestionLabel": "Research suggestions (Optional)",
       "suggestionPlaceholder": "Whether to add or adjust research directions...",
       "references": "References",
-      "relatedImages": "Related Images"
+      "relatedImages": "Related Images",
+      "taskSearchPlaceholder": "Search tasks by topic or goal...",
+      "statusFilterAll": "All statuses",
+      "statusUnprocessed": "Unprocessed",
+      "statusProcessing": "Processing",
+      "statusCompleted": "Completed",
+      "statusFailed": "Failed",
+      "retryFailed": "Retry failed",
+      "removeFailed": "Remove failed",
+      "sortDefault": "Sort: default",
+      "sortQueryAsc": "Sort: query (A-Z)",
+      "sortStatus": "Sort: status",
+      "sortSourcesDesc": "Sort: most sources",
+      "expandAll": "Expand all",
+      "collapseAll": "Collapse all",
+      "exportFilteredMarkdown": "Export filtered Markdown",
+      "exportFilteredJSON": "Export filtered JSON",
+      "exportEmpty": "No filtered tasks to export.",
+      "exportSuccess": "Filtered tasks exported.",
+      "showingTasks": "Showing {{shown}} of {{total}} tasks",
+      "noFilteredTasks": "No tasks match the current filters."
     },
     "finalReport": {
       "title": "4. Final Report",
@@ -59,6 +107,19 @@
       "localResearchedInfor": "Researched {{total}} local resources",
       "writingRequirementLabel": "Writing requirements (optional)",
       "writingRequirementPlaceholder": "You can raise any request related to report writing."
+    },
+    "workflow": {
+      "title": "Research Workflow",
+      "summary": "{{progress}}% complete ({{completed}}/{{total}} stages)",
+      "topic": "Topic",
+      "questions": "Questions",
+      "plan": "Plan",
+      "collection": "Collection",
+      "report": "Final report",
+      "collectionDetail": "{{completed}}/{{total}} tasks completed",
+      "done": "Done",
+      "active": "In progress",
+      "pending": "Pending"
     }
   },
   "history": {
@@ -288,8 +349,17 @@
     "bocha": "Bocha",
     "parallelSearch": "Parallel Search",
     "parallelSearchTip": "Parallel search helps speed up the data collection process, but too high a rate may trigger the model's request per minute limit.",
+    "autoReviewRounds": "Auto Follow-up Rounds",
+    "autoReviewRoundsTip": "Automatically run additional review-and-search rounds after the first research pass. Set to 0 to disable.",
+    "maxCollectionTopics": "Collection Topics",
+    "maxCollectionTopicsTip": "Maximum number of information collection topics generated and researched in each round.",
     "searchResults": "Search Results",
     "searchResultsTip": "The maximum number of web searches. Some search engines do not support this parameter.",
+    "searchIncludeDomains": "Include Domains",
+    "searchIncludeDomainsTip": "Only keep search results from these domains. Supports comma, space, or newline separators. Applies to third-party search providers.",
+    "searchExcludeDomains": "Exclude Domains",
+    "searchExcludeDomainsTip": "Exclude search results from these domains. Supports comma, space, or newline separators.",
+    "searchDomainsPlaceholder": "example.com\nsubdomain.example.org",
     "searchApiKeyPlaceholder": "Please enter your Api Key",
     "searchScope": "Search Scope",
     "scopeValue": {
@@ -327,6 +397,21 @@
     "citationImageTip": "Enabling reference images will attempt to add content-related images to the final report through a prompt.",
     "textOutputMode": "Text Output Mode",
     "textOutputModeTip": "Text output effect of AI. Characters, output text like a typewriter. Words, output by word, the output is most efficient. Lines, the output effect is most stable.",
+    "reportStyle": "Report Style",
+    "reportStyleTip": "Controls how the final report is written.",
+    "reportStyleValue": {
+      "balanced": "Balanced",
+      "executive": "Executive",
+      "technical": "Technical",
+      "concise": "Concise"
+    },
+    "reportLength": "Report Length",
+    "reportLengthTip": "Controls the target depth of the final report.",
+    "reportLengthValue": {
+      "brief": "Brief",
+      "standard": "Standard",
+      "comprehensive": "Comprehensive"
+    },
     "fileFormatResource": "File Attachment",
     "fileFormatResourceTip": "Using file-format attachment can effectively reduce token usage and avoid exceeding the model's maximum context limit. This is only valid for models that support document understanding.",
     "character": "Character",
@@ -336,6 +421,10 @@
     "confirm": "Confirm",
     "cancel": "Cancel",
     "useLocalResource": "Use Local Resource Only",
-    "useLocalResourceTip": "When enabled, only local resources will be used for research and web crawling. No external network requests will be made."
+    "useLocalResourceTip": "When enabled, only local resources will be used for research and web crawling. No external network requests will be made.",
+    "promptOverrides": "Prompt Overrides",
+    "promptOverridesTip": "Use a JSON object to override built-in deep research prompts. Only the provided keys are overridden.",
+    "promptOverridesPlaceholder": "{\n  \"systemInstruction\": \"You are an expert researcher...\",\n  \"reportPlanPrompt\": \"Given the following query...\"\n}",
+    "promptOverridesInvalid": "Prompt overrides must be a valid JSON object."
   }
 }

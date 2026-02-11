@@ -4,6 +4,24 @@
   "openSource": "Mã Nguồn Mở",
   "copyright": "Tạo với ❤️ bởi nhóm {{name}}",
   "searchPlaceholder": "Vui lòng nhập từ khóa",
+  "header": {
+    "session": {
+      "export": "Xuất phiên",
+      "import": "Nhập phiên",
+      "exportSuccess": "Đã xuất phiên hiện tại.",
+      "importSuccess": "Nhập phiên thành công.",
+      "importFailed": "Không thể nhập phiên."
+    },
+    "shortcuts": {
+      "title": "Phím tắt nâng cao",
+      "openSetting": "Mở cài đặt",
+      "openHistory": "Mở lịch sử",
+      "openKnowledge": "Mở cơ sở tri thức",
+      "exportSession": "Xuất phiên hiện tại",
+      "importSession": "Nhập ảnh chụp phiên",
+      "toggleHelp": "Bật/Tắt trợ giúp phím tắt"
+    }
+  },
   "research": {
     "common": {
       "startThinking": "Bắt đầu suy nghĩ",
@@ -29,12 +47,22 @@
       "save": "Lưu",
       "copy": "Sao chép",
       "export": "Xuất",
-      "delete": "Xóa"
+      "delete": "Xóa",
+      "submitShortcut": "Phím tắt: Ctrl/Cmd + Enter"
     },
     "topic": {
       "title": "1. Chủ Đề Nghiên Cứu",
       "topicLabel": "1.1 Chủ đề nghiên cứu",
-      "topicPlaceholder": "Bất kỳ câu hỏi nào bạn muốn biết..."
+      "topicPlaceholder": "Bất kỳ câu hỏi nào bạn muốn biết...",
+      "presetsLabel": "Mẫu nhanh",
+      "presets": {
+        "marketLabel": "Bản đồ thị trường",
+        "marketPrompt": "Phân tích bức tranh thị trường hiện tại cho [chủ đề của bạn]. So sánh các nhà cung cấp lớn, mô hình giá, xu hướng thị phần và rủi ro chính trong 12 tháng tới.",
+        "technicalLabel": "Phân tích kỹ thuật",
+        "technicalPrompt": "Thực hiện phân tích kỹ thuật chuyên sâu về [chủ đề của bạn]. Trình bày các lựa chọn kiến trúc, đánh đổi triển khai, giới hạn hiệu năng và chiến lược rollout đề xuất.",
+        "comparisonLabel": "So sánh phương án",
+        "comparisonPrompt": "So sánh các giải pháp hàng đầu cho [chủ đề của bạn]. Tạo ma trận quyết định bao gồm tính năng, chi phí, độ khó tích hợp, bảo mật/tuân thủ và khả năng bảo trì dài hạn."
+      }
     },
     "feedback": {
       "title": "2. Đặt Câu Hỏi",
@@ -50,7 +78,27 @@
       "suggestionLabel": "Gợi ý nghiên cứu (không bắt buộc)",
       "suggestionPlaceholder": "Có muốn thêm hoặc điều chỉnh hướng nghiên cứu không...",
       "references": "Tài liệu tham khảo",
-      "relatedImages": "Hình ảnh liên quan"
+      "relatedImages": "Hình ảnh liên quan",
+      "taskSearchPlaceholder": "Tìm nhiệm vụ theo chủ đề hoặc mục tiêu...",
+      "statusFilterAll": "Tất cả trạng thái",
+      "statusUnprocessed": "Chưa xử lý",
+      "statusProcessing": "Đang xử lý",
+      "statusCompleted": "Hoàn thành",
+      "statusFailed": "Thất bại",
+      "retryFailed": "Chạy lại mục lỗi",
+      "removeFailed": "Xóa mục lỗi",
+      "sortDefault": "Sắp xếp: mặc định",
+      "sortQueryAsc": "Sắp xếp: truy vấn (A-Z)",
+      "sortStatus": "Sắp xếp: trạng thái",
+      "sortSourcesDesc": "Sắp xếp: nhiều nguồn nhất",
+      "expandAll": "Mở rộng tất cả",
+      "collapseAll": "Thu gọn tất cả",
+      "exportFilteredMarkdown": "Xuất Markdown đã lọc",
+      "exportFilteredJSON": "Xuất JSON đã lọc",
+      "exportEmpty": "Không có nhiệm vụ đã lọc để xuất.",
+      "exportSuccess": "Đã xuất các nhiệm vụ đã lọc.",
+      "showingTasks": "Hiển thị {{shown}} / {{total}} nhiệm vụ",
+      "noFilteredTasks": "Không có nhiệm vụ phù hợp với bộ lọc hiện tại."
     },
     "finalReport": {
       "title": "4. Báo Cáo Cuối Cùng",
@@ -59,6 +107,19 @@
       "localResearchedInfor": "Đã nghiên cứu {{total}} tài nguyên cục bộ",
       "writingRequirementLabel": "Yêu cầu viết (không bắt buộc)",
       "writingRequirementPlaceholder": "Bạn có thể nêu bất kỳ yêu cầu nào liên quan đến việc viết báo cáo."
+    },
+    "workflow": {
+      "title": "Quy trình nghiên cứu",
+      "summary": "Hoàn thành {{progress}}% ({{completed}}/{{total}} giai đoạn)",
+      "topic": "Chủ đề",
+      "questions": "Câu hỏi",
+      "plan": "Kế hoạch",
+      "collection": "Thu thập",
+      "report": "Báo cáo cuối",
+      "collectionDetail": "Hoàn thành {{completed}}/{{total}} nhiệm vụ",
+      "done": "Hoàn thành",
+      "active": "Đang thực hiện",
+      "pending": "Chưa bắt đầu"
     }
   },
   "history": {
@@ -288,8 +349,17 @@
     "bocha": "Bocha",
     "parallelSearch": "Tìm kiếm song song",
     "parallelSearchTip": "Tăng tốc thu thập dữ liệu, nhưng có thể bị giới hạn số yêu cầu/phút.",
+    "autoReviewRounds": "Số vòng nghiên cứu tự động",
+    "autoReviewRoundsTip": "Tự động chạy thêm các vòng rà soát và tìm kiếm sau vòng đầu tiên. Đặt 0 để tắt.",
+    "maxCollectionTopics": "Chủ đề thu thập",
+    "maxCollectionTopicsTip": "Số lượng chủ đề thu thập thông tin tối đa được tạo và nghiên cứu trong mỗi vòng.",
     "searchResults": "Kết quả tìm kiếm",
     "searchResultsTip": "Số lượng kết quả tìm kiếm tối đa.",
+    "searchIncludeDomains": "Miền được phép",
+    "searchIncludeDomainsTip": "Chỉ giữ kết quả từ các miền này. Có thể phân tách bằng dấu phẩy, khoảng trắng hoặc xuống dòng. Áp dụng cho nhà cung cấp tìm kiếm bên thứ ba.",
+    "searchExcludeDomains": "Miền bị chặn",
+    "searchExcludeDomainsTip": "Loại bỏ kết quả từ các miền này. Có thể phân tách bằng dấu phẩy, khoảng trắng hoặc xuống dòng.",
+    "searchDomainsPlaceholder": "example.com\nsubdomain.example.org",
     "searchApiKeyPlaceholder": "Vui lòng nhập khóa API tìm kiếm",
     "searchScope": "Phạm vi tìm kiếm",
     "scopeValue": {
@@ -327,6 +397,21 @@
     "citationImageTip": "Bật hình ảnh tham khảo để chèn hình minh họa vào báo cáo.",
     "textOutputMode": "Chế độ xuất văn bản",
     "textOutputModeTip": "Hiệu ứng xuất văn bản của AI. Ký tự, xuất văn bản giống như máy đánh chữ. Từ, xuất theo từ, đầu ra hiệu quả nhất. Dòng, hiệu ứng đầu ra ổn định nhất.",
+    "reportStyle": "Phong cách báo cáo",
+    "reportStyleTip": "Điều chỉnh cách viết báo cáo cuối cùng.",
+    "reportStyleValue": {
+      "balanced": "Cân bằng",
+      "executive": "Điều hành",
+      "technical": "Kỹ thuật",
+      "concise": "Ngắn gọn"
+    },
+    "reportLength": "Độ dài báo cáo",
+    "reportLengthTip": "Điều chỉnh mức độ chi tiết mục tiêu của báo cáo cuối cùng.",
+    "reportLengthValue": {
+      "brief": "Ngắn",
+      "standard": "Tiêu chuẩn",
+      "comprehensive": "Toàn diện"
+    },
     "fileFormatResource": "Tệp đính kèm",
     "fileFormatResourceTip": "Sử dụng tệp đính kèm định dạng có thể giảm thiểu hiệu quả việc sử dụng mã thông báo và tránh vượt quá giới hạn ngữ cảnh tối đa của mô hình. Điều này chỉ áp dụng cho các mô hình hỗ trợ hiểu tài liệu.",
     "character": "Ký tự",
@@ -336,6 +421,10 @@
     "confirm": "Xác nhận",
     "cancel": "Hủy",
     "useLocalResource": "Chỉ sử dụng tài nguyên cục bộ",
-    "useLocalResourceTip": "Khi bật, chỉ sử dụng tài nguyên cục bộ cho nghiên cứu và thu thập dữ liệu web. Không gửi yêu cầu ra ngoài."
+    "useLocalResourceTip": "Khi bật, chỉ sử dụng tài nguyên cục bộ cho nghiên cứu và thu thập dữ liệu web. Không gửi yêu cầu ra ngoài.",
+    "promptOverrides": "Ghi đè prompt",
+    "promptOverridesTip": "Dùng đối tượng JSON để ghi đè các prompt nghiên cứu sâu mặc định. Chỉ các khóa được cung cấp mới bị ghi đè.",
+    "promptOverridesPlaceholder": "{\n  \"systemInstruction\": \"You are an expert researcher...\",\n  \"reportPlanPrompt\": \"Given the following query...\"\n}",
+    "promptOverridesInvalid": "Ghi đè prompt phải là một đối tượng JSON hợp lệ."
   }
 }

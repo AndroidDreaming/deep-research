@@ -4,6 +4,24 @@
   "openSource": "开源代码",
   "copyright": "{{name}} 构建",
   "searchPlaceholder": "请输入关键词",
+  "header": {
+    "session": {
+      "export": "导出会话",
+      "import": "导入会话",
+      "exportSuccess": "当前会话已导出。",
+      "importSuccess": "会话导入成功。",
+      "importFailed": "会话导入失败。"
+    },
+    "shortcuts": {
+      "title": "高级快捷键",
+      "openSetting": "打开设置",
+      "openHistory": "打开历史记录",
+      "openKnowledge": "打开知识库",
+      "exportSession": "导出当前会话",
+      "importSession": "导入会话快照",
+      "toggleHelp": "切换快捷键帮助"
+    }
+  },
   "research": {
     "common": {
       "startThinking": "开始思考",
@@ -29,12 +47,22 @@
       "save": "保存",
       "copy": "复制",
       "export": "导出",
-      "delete": "删除"
+      "delete": "删除",
+      "submitShortcut": "快捷键：Ctrl/Cmd + Enter"
     },
     "topic": {
       "title": "1. 研究方向",
       "topicLabel": "1.1 研究主题",
-      "topicPlaceholder": "任何您想了解的问题..."
+      "topicPlaceholder": "任何您想了解的问题...",
+      "presetsLabel": "快速模板",
+      "presets": {
+        "marketLabel": "市场全景",
+        "marketPrompt": "梳理 [你的主题] 的当前市场格局。对比主要厂商、定价模式、市场份额趋势，并评估未来 12 个月的关键风险。",
+        "technicalLabel": "技术深度分析",
+        "technicalPrompt": "对 [你的主题] 做技术深度分析。说明架构方案、实现权衡、性能约束，以及推荐的落地路线。",
+        "comparisonLabel": "方案对比",
+        "comparisonPrompt": "对比 [你的主题] 的主流方案。构建决策矩阵，覆盖功能、成本、集成难度、安全合规和长期可维护性。"
+      }
     },
     "feedback": {
       "title": "2. 提出您的想法",
@@ -50,7 +78,27 @@
       "suggestionLabel": "研究建议（可选）",
       "suggestionPlaceholder": "是否增加或者调整研究方向...",
       "references": "参考文献",
-      "relatedImages": "相关图片"
+      "relatedImages": "相关图片",
+      "taskSearchPlaceholder": "按主题或研究目标搜索任务...",
+      "statusFilterAll": "全部状态",
+      "statusUnprocessed": "未处理",
+      "statusProcessing": "处理中",
+      "statusCompleted": "已完成",
+      "statusFailed": "失败",
+      "retryFailed": "重试失败任务",
+      "removeFailed": "删除失败任务",
+      "sortDefault": "排序：默认",
+      "sortQueryAsc": "排序：查询 (A-Z)",
+      "sortStatus": "排序：状态",
+      "sortSourcesDesc": "排序：来源最多",
+      "expandAll": "全部展开",
+      "collapseAll": "全部折叠",
+      "exportFilteredMarkdown": "导出筛选结果 Markdown",
+      "exportFilteredJSON": "导出筛选结果 JSON",
+      "exportEmpty": "没有可导出的筛选任务。",
+      "exportSuccess": "筛选任务已导出。",
+      "showingTasks": "显示 {{shown}} / {{total}} 个任务",
+      "noFilteredTasks": "当前筛选条件下没有匹配任务。"
     },
     "finalReport": {
       "title": "4. 最终报告",
@@ -59,6 +107,19 @@
       "localResearchedInfor": "已研究 {{total}} 个本地资源",
       "writingRequirementLabel": "写作要求（可选）",
       "writingRequirementPlaceholder": "您可以提出任何与撰写报告相关的要求。"
+    },
+    "workflow": {
+      "title": "研究流程",
+      "summary": "已完成 {{progress}}%（{{completed}}/{{total}} 阶段）",
+      "topic": "主题",
+      "questions": "问题",
+      "plan": "计划",
+      "collection": "信息收集",
+      "report": "最终报告",
+      "collectionDetail": "已完成 {{completed}}/{{total}} 个任务",
+      "done": "已完成",
+      "active": "进行中",
+      "pending": "待开始"
     }
   },
   "history": {
@@ -288,8 +349,17 @@
     "bocha": "博查",
     "parallelSearch": "并行搜索",
     "parallelSearchTip": "并行搜索能加快数据信息收集，但过高的并发率可能触发模型的每分钟请求次数限制。",
+    "autoReviewRounds": "自动追加研究轮次",
+    "autoReviewRoundsTip": "在首轮研究后自动执行额外的复盘与搜索轮次。设为 0 可关闭。",
+    "maxCollectionTopics": "采集主题数",
+    "maxCollectionTopicsTip": "每轮信息采集中，最多生成并研究的主题数量。",
     "searchResults": "搜索数量",
     "searchResultsTip": "最大搜索数量。部分搜索引擎并不支持此参数。",
+    "searchIncludeDomains": "包含域名",
+    "searchIncludeDomainsTip": "仅保留这些域名的搜索结果。支持逗号、空格或换行分隔。仅对第三方搜索服务生效。",
+    "searchExcludeDomains": "排除域名",
+    "searchExcludeDomainsTip": "排除这些域名的搜索结果。支持逗号、空格或换行分隔。",
+    "searchDomainsPlaceholder": "example.com\nsubdomain.example.org",
     "searchApiKeyPlaceholder": "请输入您的 API 密钥",
     "searchScope": "搜索范围",
     "scopeValue": {
@@ -327,6 +397,21 @@
     "citationImageTip": "启用引用图片，会通过 prompt 尝试在最终报告中添加与内容相关的图片。",
     "textOutputMode": "文本输出模式",
     "textOutputModeTip": "AI 的文本输出效果。字符，像打字机那样输出文本。单词，按单词输出，输出效率最高。行，输出效果最平稳。",
+    "reportStyle": "报告风格",
+    "reportStyleTip": "控制最终报告的写作风格。",
+    "reportStyleValue": {
+      "balanced": "均衡",
+      "executive": "高管",
+      "technical": "技术",
+      "concise": "简洁"
+    },
+    "reportLength": "报告长度",
+    "reportLengthTip": "控制最终报告的目标深度。",
+    "reportLengthValue": {
+      "brief": "简短",
+      "standard": "标准",
+      "comprehensive": "全面"
+    },
     "fileFormatResource": "文件附件",
     "fileFormatResourceTip": "使用文件格式的附件可以有效减少 token 的使用量，避免超出模型最大上下文限制，仅对支持文档理解的模型有效。",
     "character": "字符",
@@ -336,6 +421,10 @@
     "confirm": "确认",
     "cancel": "取消",
     "useLocalResource": "仅本地资源",
-    "useLocalResourceTip": "开启后，研究和网页爬取仅使用本地资源，不会发起外部网络请求。"
+    "useLocalResourceTip": "开启后，研究和网页爬取仅使用本地资源，不会发起外部网络请求。",
+    "promptOverrides": "提示词覆盖",
+    "promptOverridesTip": "使用 JSON 对象覆盖内置深度研究提示词。只会覆盖你提供的键。",
+    "promptOverridesPlaceholder": "{\n  \"systemInstruction\": \"You are an expert researcher...\",\n  \"reportPlanPrompt\": \"Given the following query...\"\n}",
+    "promptOverridesInvalid": "提示词覆盖必须是合法的 JSON 对象。"
   }
 }
